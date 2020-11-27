@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.cyan,
         brightness: Brightness.dark,
-        // canvasColor: Colors.black87,
+        canvasColor: Colors.black87,
         // dividerTheme: const DividerThemeData(
         //   thickness: 1,
         //   color: Colors.cyanAccent,

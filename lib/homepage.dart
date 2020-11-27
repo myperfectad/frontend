@@ -138,6 +138,13 @@ class _ListDrawerState extends State<ListDrawer> {
       ),
     );
 
-    return drawer;
+    return Theme(
+      child: drawer,
+      data: Theme.of(context).copyWith(
+        // note: this is exactly the default drawer color
+        // if the canvasColor was not overriden in main
+        canvasColor: Colors.grey[850],
+      ),
+    );
   }
 }
