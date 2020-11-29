@@ -34,7 +34,11 @@ class HomePage extends StatelessWidget {
         ],
       );
     } else {
-      // TODO add mobile layout
+      return Scaffold(
+        appBar: const AdaptiveAppBar(),
+        body: body,
+        drawer: ListDrawer(),
+      );
     }
   }
 }
@@ -58,7 +62,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: !isDesktop,
       title: isDesktop
           ? null
-          : Text('Add sort by buttons here'),
+          : Text('Add sort by buttons here mobile'),
       bottom: isDesktop
           ? PreferredSize(
         preferredSize: const Size.fromHeight(26),
