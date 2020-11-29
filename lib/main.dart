@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
         //   thickness: 1,
         //   color: Colors.cyanAccent,
         // ),
+        fontFamily: 'OpenSans',
       ),
       home: HomePage(),
     );
