@@ -113,15 +113,15 @@ class _ListDrawerState extends State<ListDrawer> {
       child: SafeArea(
         child: ListView(
           children: [
-            ListTile(
-              title: Text(
-                'My Perfect Ad'
-              ),
-              subtitle: Text(
-                'Logo here'
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image.asset(
+                'images/logo.png',
+                height: 96.0,
+                alignment: Alignment.centerLeft,
               ),
             ),
-            const Divider(),
+            // const Divider(),
             ...Iterable<int>.generate(numItems).toList().map((i) {
               return ListTile(
                 enabled: true,
