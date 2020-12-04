@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ListDrawer extends StatefulWidget {
   @override
@@ -13,16 +16,21 @@ class _ListDrawerState extends State<ListDrawer> {
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: ListView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Image.asset(
                 'images/logo.png',
                 height: 96.0,
                 alignment: Alignment.centerLeft,
               ),
-              const Divider(),
+              // const Divider(),
+              const SizedBox(height: 16.0),
               GenderSwitch(),
+              // const SizedBox(height: 16.0),
               AgeSlider(),
+              const SizedBox(height: 16.0),
+              MiniMap(),
             ],
           ),
         ),
@@ -93,6 +101,45 @@ class _AgeSliderState extends State<AgeSlider> {
         });
       },
     );
+  }
+}
+
+class MiniMap extends StatefulWidget {
+  @override
+  _MiniMapState createState() => _MiniMapState();
+}
+
+class _MiniMapState extends State<MiniMap> {
+  Completer<GoogleMapController> _controller = Completer();
+
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
+
+  static final CameraPosition _kLake = CameraPosition(
+      bearing: 192.8334901395799,
+      target: LatLng(37.43296265331129, -122.08832357078792),
+      tilt: 59.440717697143555,
+      zoom: 19.151926040649414);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200.0,
+      child: GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: _kGooglePlex,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+        ),
+    );
+  }
+
+  Future<void> _goToTheLake() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
 
