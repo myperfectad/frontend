@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'homepage/homepage.dart';
 
@@ -21,6 +22,14 @@ class MyApp extends StatelessWidget {
         //   color: Colors.cyanAccent,
         // ),
         fontFamily: 'OpenSans',
+        textTheme: TextTheme(
+          headline1: GoogleFonts.righteous(),
+          headline2: GoogleFonts.righteous(),
+          headline3: GoogleFonts.righteous(),
+          headline4: GoogleFonts.righteous(),
+          headline5: GoogleFonts.righteous(),
+          headline6: GoogleFonts.righteous(),
+        )
       ),
       home: HomePage(),
     );
