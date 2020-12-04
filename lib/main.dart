@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'My Perfect Ad',
       theme: ThemeData(
         primarySwatch: Colors.cyan,
+        accentColor: Colors.cyanAccent,
         brightness: Brightness.dark,
         canvasColor: Colors.black87,
         // dividerTheme: const DividerThemeData(

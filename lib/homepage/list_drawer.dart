@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ListDrawer extends StatefulWidget {
   @override
@@ -6,41 +7,23 @@ class ListDrawer extends StatefulWidget {
 }
 
 class _ListDrawerState extends State<ListDrawer> {
-  static final numItems = 9;
-
-  int selectedItem = 0;
-
   @override
   Widget build(BuildContext context) {
     final drawer = Drawer(
       child: SafeArea(
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Image.asset(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              Image.asset(
                 'images/logo.png',
                 height: 96.0,
                 alignment: Alignment.centerLeft,
               ),
-            ),
-            // const Divider(),
-            ...Iterable<int>.generate(numItems).toList().map((i) {
-              return ListTile(
-                enabled: true,
-                selected: i == selectedItem,
-                leading: const Icon(Icons.favorite),
-                title: Text(
-                  'Item ' + i.toString(),
-                ),
-                onTap: () {
-                  setState(() {
-                    selectedItem = i;
-                  });
-                },
-              );
-            }),
-          ],
+              const Divider(),
+              GenderSwitch(),
+            ],
+          ),
         ),
       ),
     );
@@ -52,6 +35,33 @@ class _ListDrawerState extends State<ListDrawer> {
         // if the canvasColor was not overriden in main
         canvasColor: Colors.grey[850],
       ),
+    );
+  }
+}
+
+class GenderSwitch extends StatefulWidget {
+  @override
+  _GenderSwitchState createState() => _GenderSwitchState();
+}
+
+class _GenderSwitchState extends State<GenderSwitch> {
+  bool isMale = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        FaIcon(FontAwesomeIcons.male, color: isMale ? null : Theme.of(context).accentColor),
+        Switch(
+          value: isMale,
+          onChanged: (newValue) {
+            setState(() {
+              isMale = newValue;
+            });
+          },
+        ),
+        FaIcon(FontAwesomeIcons.female, color: isMale ? Theme.of(context).accentColor : null),
+      ],
     );
   }
 }
