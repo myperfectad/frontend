@@ -16,16 +16,15 @@ class _ListDrawerState extends State<ListDrawer> {
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
             children: [
               Image.asset(
                 'images/logo.png',
                 height: 96.0,
                 alignment: Alignment.centerLeft,
               ),
-              // const Divider(),
-              const SizedBox(height: 16.0),
+              const Divider(),
+              // const SizedBox(height: 16.0),
               GenderSwitch(),
               // const SizedBox(height: 16.0),
               AgeSlider(),
@@ -111,11 +110,7 @@ class MiniMap extends StatefulWidget {
 
 class _MiniMapState extends State<MiniMap> {
   Completer<GoogleMapController> _controller = Completer();
-
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  LatLng _currentPos = LatLng(51.5074, 0.1278);
 
   static final CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
@@ -128,12 +123,41 @@ class _MiniMapState extends State<MiniMap> {
     return SizedBox(
       height: 200.0,
       child: GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: _kGooglePlex,
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-          },
+        mapType: MapType.normal,
+        scrollGesturesEnabled: false,
+        rotateGesturesEnabled: false,
+        tiltGesturesEnabled: false,
+        // removes the zoom buttons
+        zoomControlsEnabled: false,
+        initialCameraPosition: CameraPosition(
+          target: _currentPos,
+          zoom: 5.0,
         ),
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+        onTap: (tapPosition) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Container(
+                    width: 600.0,
+                    height: 400.0,
+                    child: GoogleMap(
+                      mapType: MapType.normal,
+                      initialCameraPosition: CameraPosition(
+                        target: _currentPos,
+                        zoom: 10.0
+                      ),
+                      onTap: (innerTapPosition) {
+                      },
+                    ),
+                  ),
+                );
+              });
+        },
+      ),
     );
   }
 
