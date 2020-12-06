@@ -109,14 +109,12 @@ class MiniMap extends StatefulWidget {
 }
 
 class _MiniMapState extends State<MiniMap> {
-  Completer<GoogleMapController> _controller = Completer();
-  LatLng _currentPos = LatLng(51.5074, 0.1278);
+  static final LatLng _kLondonCoords = LatLng(51.5074, 0.1278);
+  static final double _kZoom = 5.0;
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  Completer<GoogleMapController> _controller = Completer();
+  Marker _currentPosMarker;
+  LatLng _currentPos = _kLondonCoords;
 
   @override
   Widget build(BuildContext context) {
@@ -131,41 +129,101 @@ class _MiniMapState extends State<MiniMap> {
         zoomControlsEnabled: false,
         initialCameraPosition: CameraPosition(
           target: _currentPos,
-          zoom: 5.0,
+          zoom: _kZoom,
         ),
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
+          setState(() {
+            _currentPosMarker = Marker(
+              markerId: MarkerId(_currentPos.toString()),
+              position: _currentPos,
+            );
+          });
         },
-        onTap: (tapPosition) {
-          showDialog(
+        onTap: (_) async {
+          await showDialog(
               context: context,
               builder: (context) {
-                return AlertDialog(
-                  content: Container(
-                    width: 600.0,
-                    height: 400.0,
-                    child: GoogleMap(
-                      mapType: MapType.normal,
-                      initialCameraPosition: CameraPosition(
-                        target: _currentPos,
-                        zoom: 10.0
-                      ),
-                      onTap: (innerTapPosition) {
-                      },
-                    ),
-                  ),
-                );
+                return MapDialog(_currentPos, _onMapTapped);
               });
+          setState(() {
+            _currentPosMarker = Marker(
+              markerId: MarkerId(_currentPos.toString()),
+              position: _currentPos,
+            );
+          });
+          _goToCurrentPos();
         },
+        markers: _currentPosMarker != null ? {_currentPosMarker} : null,
       ),
     );
   }
+  
+  void _onMapTapped(LatLng newPos) {
+    _currentPos = newPos;
+  }
 
-  Future<void> _goToTheLake() async {
+  Future<void> _goToCurrentPos() async {
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: _currentPos,
+        zoom: _kZoom,
+      ),
+    ));
   }
 }
+
+class MapDialog extends StatefulWidget {
+  MapDialog(this.initialPos, this.onMapTapped, {Key key}) : super(key: key);
+
+  final LatLng initialPos;
+  final void Function(LatLng) onMapTapped;
+
+  @override
+  _MapDialogState createState() => _MapDialogState();
+}
+
+class _MapDialogState extends State<MapDialog> {
+  Marker _currentPosMarker;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: Container(
+        width: 600.0,
+        height: 400.0,
+        child: GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+              target: widget.initialPos,
+              zoom: 10.0,
+          ),
+          onMapCreated: (_) {
+            setState(() {
+              _currentPosMarker = Marker(
+                markerId: MarkerId(widget.initialPos.toString()),
+                position: widget.initialPos,
+              );
+            });
+          },
+          onTap: (tapPosition) {
+            setState(() {
+              _currentPosMarker = Marker(
+                // has to be new every time for it to update
+                markerId: MarkerId(tapPosition.toString()),
+                position: tapPosition,
+              );
+            });
+            widget.onMapTapped(tapPosition);
+          },
+          markers: _currentPosMarker != null ? {_currentPosMarker} : null,
+        ),
+      ),
+    );
+  }
+}
+
 
 class _ThumbShape extends RoundRangeSliderThumbShape {
   final _indicatorShape = const PaddleRangeSliderValueIndicatorShape();
