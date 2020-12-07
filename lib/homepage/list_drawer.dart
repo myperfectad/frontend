@@ -201,45 +201,87 @@ class MapDialog extends StatefulWidget {
 
 class _MapDialogState extends State<MapDialog> {
   Marker _currentPosMarker;
+  Circle _currentRangeCircle;
+  double _currentRangeKm = 20;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: Container(
-        width: 600.0,
-        height: 400.0,
-        child: GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: CameraPosition(
-              target: widget.initialPos,
-              zoom: 10.0,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 600.0,
+            height: 400.0,
+            child: GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+                  target: widget.initialPos,
+                  zoom: 10.0,
+              ),
+              onMapCreated: (_) {
+                setState(() {
+                  _setPosition(widget.initialPos);
+                });
+              },
+              onTap: (tapPosition) {
+                setState(() {
+                  _setPosition(tapPosition);
+                });
+                widget.onMapTapped(tapPosition);
+              },
+              markers: _currentPosMarker != null ? {_currentPosMarker} : null,
+              circles: _currentRangeCircle != null ? {_currentRangeCircle} : null,
+            ),
           ),
-          onMapCreated: (_) {
-            setState(() {
-              _currentPosMarker = Marker(
-                markerId: MarkerId(widget.initialPos.toString()),
-                position: widget.initialPos,
-              );
-            });
-          },
-          onTap: (tapPosition) {
-            setState(() {
-              _currentPosMarker = Marker(
-                // has to be new every time for it to update
-                markerId: MarkerId(tapPosition.toString()),
-                position: tapPosition,
-              );
-            });
-            widget.onMapTapped(tapPosition);
-          },
-          markers: _currentPosMarker != null ? {_currentPosMarker} : null,
-        ),
+          const SizedBox(height: 16.0),
+          Slider(
+            value: _currentRangeKm,
+            min: 1,
+            max: 100,
+            divisions: 99,
+            label: '${_currentRangeKm.round().toString()} km',
+            onChanged: (double value) {
+              setState(() {
+                _currentRangeKm = value;
+                _currentRangeCircle = _styleCircle(Circle(
+                  circleId: CircleId('0'),
+                  // keep current position
+                  center: _currentPosMarker.position,
+                  radius: _currentRangeKm * 1000,
+                ));
+              });
+            },
+          ),
+        ],
       ),
+    );
+  }
+  
+  void _setPosition(LatLng position) {
+    _currentPosMarker = Marker(
+      // has to be new every time for it to update
+      markerId: MarkerId(position.toString()),
+      position: position,
+    );
+    _currentRangeCircle = _styleCircle(Circle(
+      // does NOT need to be new every time. Weird
+      circleId: CircleId('0'),
+      center: position,
+      radius: _currentRangeKm * 1000,
+    ));
+  }
+
+  Circle _styleCircle(Circle c) {
+    return c.copyWith(
+      strokeWidthParam: 2,
+      strokeColorParam: Color.lerp(Colors.cyan, Colors.transparent, 0.3),
+      fillColorParam: Color.lerp(Colors.cyan, Colors.transparent, 0.8),
     );
   }
 }
 
-
+@deprecated
 class _ThumbShape extends RoundRangeSliderThumbShape {
   final _indicatorShape = const PaddleRangeSliderValueIndicatorShape();
 
