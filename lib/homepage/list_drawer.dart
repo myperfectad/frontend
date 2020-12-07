@@ -25,7 +25,7 @@ class _ListDrawerState extends State<ListDrawer> {
               ),
               const Divider(),
               // const SizedBox(height: 16.0),
-              GenderSwitch(),
+              GenderCheckBoxes(),
               // const SizedBox(height: 16.0),
               AgeSlider(),
               const SizedBox(height: 16.0),
@@ -47,29 +47,44 @@ class _ListDrawerState extends State<ListDrawer> {
   }
 }
 
-class GenderSwitch extends StatefulWidget {
+class GenderCheckBoxes extends StatefulWidget {
   @override
-  _GenderSwitchState createState() => _GenderSwitchState();
+  _GenderCheckBoxesState createState() => _GenderCheckBoxesState();
 }
 
-class _GenderSwitchState extends State<GenderSwitch> {
+class _GenderCheckBoxesState extends State<GenderCheckBoxes> {
   bool isMale = true;
+  bool isFemale = true;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        FaIcon(FontAwesomeIcons.male, color: isMale ? null : Theme.of(context).accentColor),
-        Switch(
+        CheckboxListTile(
+          title: Text('Male'),
+          controlAffinity: ListTileControlAffinity.leading,
+          secondary: FaIcon(FontAwesomeIcons.male, color: isMale ? Theme.of(context).accentColor : null),
           value: isMale,
-          onChanged: (newValue) {
+          activeColor: Colors.cyan,
+          onChanged: (value) {
             setState(() {
-              isMale = newValue;
+              isMale = value;
             });
           },
         ),
-        FaIcon(FontAwesomeIcons.female, color: isMale ? Theme.of(context).accentColor : null),
+        CheckboxListTile(
+          title: Text('Female'),
+          controlAffinity: ListTileControlAffinity.leading,
+          secondary: FaIcon(FontAwesomeIcons.female, color: isFemale ? Theme.of(context).accentColor : null),
+          value: isFemale,
+          activeColor: Colors.cyan,
+          onChanged: (value) {
+            setState(() {
+              isFemale = value;
+            });
+          },
+        ),
       ],
     );
   }
@@ -91,8 +106,8 @@ class _AgeSliderState extends State<AgeSlider> {
       max: 100,
       divisions: 100,
       labels: RangeLabels(
-        _currentRangeValues.start.round().toString(),
-        _currentRangeValues.end.round().toString(),
+        '${_currentRangeValues.start.round().toString()} years old',
+        '${_currentRangeValues.end.round().toString()} years old',
       ),
       onChanged: (RangeValues values) {
         setState(() {
