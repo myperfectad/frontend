@@ -17,12 +17,13 @@ class HomePage extends StatelessWidget {
             : const EdgeInsets.all(0),
             // : const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: LayoutBuilder(builder: (context, constraints) {
+          // TODO should probably change to builder
           return GridView.count(
             // adaptive count. Count is always 2 on mobile
             crossAxisCount: isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
-            children: List.generate(7, (index) {
+            children: List.generate(30, (index) {
               return Image.network(
-                'http://www.ll-mm.com/images/placeholders/portfolio${index + 1}.jpg',
+                'https://picsum.photos/id/${index + 9}/512',
                 // crops to square
                 fit: BoxFit.cover,
               );

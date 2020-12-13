@@ -310,7 +310,7 @@ class _CategoriesPickerState extends State<CategoriesPicker> {
             CategoryButton('images/online-shopping.png', 'Shopping'),
             CategoryButton('images/random.png', 'Random'),
             CategoryButton('images/toolbox.png', 'Utility'),
-            CategoryButton('images/town.png', 'Leisure'),
+            CategoryButton('images/town.png', 'IRL'),
           ],
         ),
       ],
