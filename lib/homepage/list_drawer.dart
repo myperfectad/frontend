@@ -30,6 +30,8 @@ class _ListDrawerState extends State<ListDrawer> {
               AgeSlider(),
               const SizedBox(height: 16.0),
               MiniMap(),
+              const SizedBox(height: 16.0),
+              CategoriesPicker(),
             ],
           ),
         ),
@@ -277,6 +279,71 @@ class _MapDialogState extends State<MapDialog> {
       strokeWidthParam: 2,
       strokeColorParam: Color.lerp(Colors.cyan, Colors.transparent, 0.3),
       fillColorParam: Color.lerp(Colors.cyan, Colors.transparent, 0.8),
+    );
+  }
+}
+
+class CategoriesPicker extends StatefulWidget {
+  @override
+  _CategoriesPickerState createState() => _CategoriesPickerState();
+}
+
+class _CategoriesPickerState extends State<CategoriesPicker> {
+
+  // TODO remember to add tooltips
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CategoryButton('images/book.png'),
+            CategoryButton('images/cinema.png'),
+            CategoryButton('images/confetti.png'),
+            CategoryButton('images/game-controller.png'),
+          ],
+        ),
+        const SizedBox(height: 8.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CategoryButton('images/online-shopping.png'),
+            CategoryButton('images/random.png'),
+            CategoryButton('images/toolbox.png'),
+            CategoryButton('images/town.png'),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class CategoryButton extends StatefulWidget {
+  CategoryButton(this.imagePath, {Key key}) : super(key: key);
+
+  final String imagePath;
+
+  @override
+  _CategoryButtonState createState() => _CategoryButtonState();
+}
+
+class _CategoryButtonState extends State<CategoryButton> {
+  bool isSelected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Image.asset(
+        widget.imagePath,
+        color: isSelected ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+      ),
+      onTap: () {
+        setState(() {
+          isSelected = !isSelected;
+        });
+      },
     );
   }
 }
