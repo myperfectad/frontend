@@ -12,8 +12,17 @@ class HomePage extends StatelessWidget {
       child: Padding(
         padding: isDesktop
             ? const EdgeInsets.symmetric(horizontal: 72, vertical: 48)
-            : const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: Container(child: Text('TODO Add scrolling content here'),
+            : const EdgeInsets.all(0),
+            // : const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        child: GridView.count(
+          crossAxisCount: 2,
+          children: List.generate(7, (index) {
+            return Image.network(
+              'http://www.ll-mm.com/images/placeholders/portfolio${index + 1}.jpg',
+              // crops to square
+              fit: BoxFit.cover,
+            );
+          }),
         ),
       ),
     );
