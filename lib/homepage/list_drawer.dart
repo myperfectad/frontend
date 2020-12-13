@@ -290,8 +290,6 @@ class CategoriesPicker extends StatefulWidget {
 
 class _CategoriesPickerState extends State<CategoriesPicker> {
 
-  // TODO remember to add tooltips
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -299,20 +297,20 @@ class _CategoriesPickerState extends State<CategoriesPicker> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CategoryButton('images/book.png'),
-            CategoryButton('images/cinema.png'),
-            CategoryButton('images/confetti.png'),
-            CategoryButton('images/game-controller.png'),
+            CategoryButton('images/book.png', 'Learning'),
+            CategoryButton('images/cinema.png', 'Film'),
+            CategoryButton('images/confetti.png', 'Fun'),
+            CategoryButton('images/game-controller.png', 'Gaming'),
           ],
         ),
         const SizedBox(height: 8.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CategoryButton('images/online-shopping.png'),
-            CategoryButton('images/random.png'),
-            CategoryButton('images/toolbox.png'),
-            CategoryButton('images/town.png'),
+            CategoryButton('images/online-shopping.png', 'Shopping'),
+            CategoryButton('images/random.png', 'Random'),
+            CategoryButton('images/toolbox.png', 'Utility'),
+            CategoryButton('images/town.png', 'Leisure'),
           ],
         ),
       ],
@@ -321,9 +319,10 @@ class _CategoriesPickerState extends State<CategoriesPicker> {
 }
 
 class CategoryButton extends StatefulWidget {
-  CategoryButton(this.imagePath, {Key key}) : super(key: key);
+  CategoryButton(this.imagePath, this.categoryName, {Key key}) : super(key: key);
 
   final String imagePath;
+  final String categoryName;
 
   @override
   _CategoryButtonState createState() => _CategoryButtonState();
@@ -334,16 +333,19 @@ class _CategoryButtonState extends State<CategoryButton> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Image.asset(
-        widget.imagePath,
-        color: isSelected ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+    return Tooltip(
+      message: widget.categoryName,
+      child: InkWell(
+        child: Image.asset(
+          widget.imagePath,
+          color: isSelected ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+        ),
+        onTap: () {
+          setState(() {
+            isSelected = !isSelected;
+          });
+        },
       ),
-      onTap: () {
-        setState(() {
-          isSelected = !isSelected;
-        });
-      },
     );
   }
 }
