@@ -5,6 +5,8 @@ import 'adaptive_appbar.dart';
 import 'list_drawer.dart';
 
 class HomePage extends StatelessWidget {
+  static const double MIN_AD_WIDTH = 256;
+
   @override
   Widget build(BuildContext context) {
     final isDesktop = isDisplayDesktop(context);
@@ -14,16 +16,19 @@ class HomePage extends StatelessWidget {
             ? const EdgeInsets.symmetric(horizontal: 72, vertical: 48)
             : const EdgeInsets.all(0),
             // : const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: GridView.count(
-          crossAxisCount: 2,
-          children: List.generate(7, (index) {
-            return Image.network(
-              'http://www.ll-mm.com/images/placeholders/portfolio${index + 1}.jpg',
-              // crops to square
-              fit: BoxFit.cover,
-            );
-          }),
-        ),
+        child: LayoutBuilder(builder: (context, constraints) {
+          return GridView.count(
+            // adaptive count. Count is always 2 on mobile
+            crossAxisCount: isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
+            children: List.generate(7, (index) {
+              return Image.network(
+                'http://www.ll-mm.com/images/placeholders/portfolio${index + 1}.jpg',
+                // crops to square
+                fit: BoxFit.cover,
+              );
+            }),
+          );
+        }),
       ),
     );
 
