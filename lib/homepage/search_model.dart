@@ -3,12 +3,82 @@ import 'package:latlong/latlong.dart';
 
 final LatLng kLondonCoords = LatLng(51.509865, -0.118092);
 
+enum Category {
+  learning, film, fun, gaming, shopping, random, utility, irl
+}
+
+extension CategoryExtension on Category {
+  String get name {
+    switch (this) {
+      
+      case Category.learning:
+        return 'Learning';
+        break;
+      case Category.film:
+        return 'Film';
+        break;
+      case Category.fun:
+        return 'Fun';
+        break;
+      case Category.gaming:
+        return 'Gaming';
+        break;
+      case Category.shopping:
+        return 'Shopping';
+        break;
+      case Category.random:
+        return 'Random';
+        break;
+      case Category.utility:
+        return 'Utility';
+        break;
+      case Category.irl:
+        return 'IRL';
+        break;
+      default:
+        return null;
+    }
+  }
+  
+  String get iconPath {
+    switch (this) {
+      case Category.learning:
+        return 'images/book.png';
+        break;
+      case Category.film:
+        return 'images/cinema.png';
+        break;
+      case Category.fun:
+        return 'images/confetti.png';
+        break;
+      case Category.gaming:
+        return 'images/game-controller.png';
+        break;
+      case Category.shopping:
+        return 'images/online-shopping.png';
+        break;
+      case Category.random:
+        return 'images/random.png';
+        break;
+      case Category.utility:
+        return 'images/toolbox.png';
+        break;
+      case Category.irl:
+        return 'images/town.png';
+        break;
+      default:
+        return null;
+    }
+  }
+}
+
 class SearchModel extends ChangeNotifier {
   bool _showMale = true;
   bool _showFemale = true;
   int _ageMin = 18;
   int _ageMax = 60;
   LatLng _location = kLondonCoords;
+  final Set<Category> _categories = {};
 
   bool get showMale => _showMale;
 
@@ -43,5 +113,19 @@ class SearchModel extends ChangeNotifier {
   set ageMin(int value) {
     _ageMin = value;
     notifyListeners();
+  }
+  
+  void addCategory(Category category) {
+    _categories.add(category);
+    notifyListeners();
+  }
+
+  void removeCategory(Category category) {
+    _categories.remove(category);
+    notifyListeners();
+  }
+
+  bool hasCategory(Category category) {
+    return _categories.contains(category);
   }
 }

@@ -236,12 +236,7 @@ class _MiniMapState extends State<MiniMap> {
   }
 }
 
-class CategoriesPicker extends StatefulWidget {
-  @override
-  _CategoriesPickerState createState() => _CategoriesPickerState();
-}
-
-class _CategoriesPickerState extends State<CategoriesPicker> {
+class CategoriesPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -250,20 +245,20 @@ class _CategoriesPickerState extends State<CategoriesPicker> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CategoryButton('images/book.png', 'Learning'),
-            CategoryButton('images/cinema.png', 'Film'),
-            CategoryButton('images/confetti.png', 'Fun'),
-            CategoryButton('images/game-controller.png', 'Gaming'),
+            CategoryButton(Category.learning),
+            CategoryButton(Category.film),
+            CategoryButton(Category.fun),
+            CategoryButton(Category.gaming),
           ],
         ),
         const SizedBox(height: 8.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CategoryButton('images/online-shopping.png', 'Shopping'),
-            CategoryButton('images/random.png', 'Random'),
-            CategoryButton('images/toolbox.png', 'Utility'),
-            CategoryButton('images/town.png', 'IRL'),
+            CategoryButton(Category.shopping),
+            CategoryButton(Category.random),
+            CategoryButton(Category.utility),
+            CategoryButton(Category.irl),
           ],
         ),
       ],
@@ -272,31 +267,44 @@ class _CategoriesPickerState extends State<CategoriesPicker> {
 }
 
 class CategoryButton extends StatefulWidget {
-  CategoryButton(this.imagePath, this.categoryName, {Key key}) : super(key: key);
+  CategoryButton(this.category, {Key key}) : super(key: key);
 
-  final String imagePath;
-  final String categoryName;
+  final Category category;
 
   @override
   _CategoryButtonState createState() => _CategoryButtonState();
 }
 
 class _CategoryButtonState extends State<CategoryButton> {
-  bool isSelected = false;
+  bool isSelected;
+
+  @override
+  void initState() {
+    super.initState();
+    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
+    isSelected = sm.hasCategory(widget.category);
+  }
 
   @override
   Widget build(BuildContext context) {
+    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
+
     return Tooltip(
-      message: widget.categoryName,
+      message: widget.category.name,
       child: InkWell(
         child: Image.asset(
-          widget.imagePath,
+          widget.category.iconPath,
           color: isSelected ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
         ),
         onTap: () {
           setState(() {
             isSelected = !isSelected;
           });
+          if (isSelected) {
+            sm.addCategory(widget.category);
+          } else {
+            sm.removeCategory(widget.category);
+          }
         },
       ),
     );
