@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong/latlong.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as GM;
+
+import 'map_dialog.dart';
 
 class ListDrawer extends StatefulWidget {
   @override
@@ -128,158 +132,65 @@ class MiniMap extends StatefulWidget {
 class _MiniMapState extends State<MiniMap> {
   static final LatLng _kLondonCoords = LatLng(51.5074, 0.1278);
   static final double _kZoom = 5.0;
+  static Marker _buildMarker(LatLng pos) {
+    return Marker(
+      width: 30.0,
+      height: 30.0,
+      point: pos,
+      builder: (context) => Container(
+        // TODO change
+        child: FlutterLogo(),
+      ),
+    );
+  }
 
-  Completer<GoogleMapController> _controller = Completer();
-  Marker _currentPosMarker;
+  final MapController _mapController = MapController();
+  Marker _currentPosMarker = _buildMarker(_kLondonCoords);
   LatLng _currentPos = _kLondonCoords;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200.0,
-      child: GoogleMap(
-        mapType: MapType.normal,
-        scrollGesturesEnabled: false,
-        rotateGesturesEnabled: false,
-        tiltGesturesEnabled: false,
-        // removes the zoom buttons
-        zoomControlsEnabled: false,
-        initialCameraPosition: CameraPosition(
-          target: _currentPos,
-          zoom: _kZoom,
-        ),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-          setState(() {
-            _currentPosMarker = Marker(
-              markerId: MarkerId(_currentPos.toString()),
-              position: _currentPos,
-            );
-          });
-        },
-        onTap: (_) async {
-          await showDialog(
-              context: context,
-              builder: (context) {
-                return MapDialog(_currentPos, _onMapTapped);
-              });
-          setState(() {
-            _currentPosMarker = Marker(
-              markerId: MarkerId(_currentPos.toString()),
-              position: _currentPos,
-            );
-          });
-          _goToCurrentPos();
-        },
-        markers: _currentPosMarker != null ? {_currentPosMarker} : null,
-      ),
-    );
-  }
-  
-  void _onMapTapped(LatLng newPos) {
-    _currentPos = newPos;
-  }
-
-  Future<void> _goToCurrentPos() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        target: _currentPos,
-        zoom: _kZoom,
-      ),
-    ));
-  }
-}
-
-class MapDialog extends StatefulWidget {
-  MapDialog(this.initialPos, this.onMapTapped, {Key key}) : super(key: key);
-
-  final LatLng initialPos;
-  final void Function(LatLng) onMapTapped;
-
-  @override
-  _MapDialogState createState() => _MapDialogState();
-}
-
-class _MapDialogState extends State<MapDialog> {
-  Marker _currentPosMarker;
-  Circle _currentRangeCircle;
-  double _currentRangeKm = 20;
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 600.0,
-            height: 400.0,
-            child: GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: CameraPosition(
-                  target: widget.initialPos,
-                  zoom: 10.0,
-              ),
-              onMapCreated: (_) {
-                setState(() {
-                  _setPosition(widget.initialPos);
-                });
-              },
-              onTap: (tapPosition) {
-                setState(() {
-                  _setPosition(tapPosition);
-                });
-                widget.onMapTapped(tapPosition);
-              },
-              markers: _currentPosMarker != null ? {_currentPosMarker} : null,
-              circles: _currentRangeCircle != null ? {_currentRangeCircle} : null,
+    return GestureDetector(
+      onTap: () async {
+        await showDialog(
+            context: context,
+            builder: (context) {
+              return MapDialog(
+                  GM.LatLng(_currentPos.latitude, _currentPos.longitude),
+                  _onMapTapped);
+            });
+        setState(() {
+          _currentPosMarker = _buildMarker(_currentPos);
+        });
+        _mapController.move(_currentPos, _kZoom);
+      },
+      child: SizedBox(
+        height: 200.0,
+        child: FlutterMap(
+          mapController: _mapController,
+          options: MapOptions(
+            center: _currentPos,
+            zoom: _kZoom,
+            interactive: false,
+          ),
+          layers: [
+            TileLayerOptions(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: ['a', 'b', 'c']),
+            MarkerLayerOptions(
+              markers: [
+                _currentPosMarker,
+              ],
             ),
-          ),
-          const SizedBox(height: 16.0),
-          Slider(
-            value: _currentRangeKm,
-            min: 1,
-            max: 100,
-            divisions: 99,
-            label: '${_currentRangeKm.round().toString()} km',
-            onChanged: (double value) {
-              setState(() {
-                _currentRangeKm = value;
-                _currentRangeCircle = _styleCircle(Circle(
-                  circleId: CircleId('0'),
-                  // keep current position
-                  center: _currentPosMarker.position,
-                  radius: _currentRangeKm * 1000,
-                ));
-              });
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-  
-  void _setPosition(LatLng position) {
-    _currentPosMarker = Marker(
-      // has to be new every time for it to update
-      markerId: MarkerId(position.toString()),
-      position: position,
-    );
-    _currentRangeCircle = _styleCircle(Circle(
-      // does NOT need to be new every time. Weird
-      circleId: CircleId('0'),
-      center: position,
-      radius: _currentRangeKm * 1000,
-    ));
-  }
 
-  Circle _styleCircle(Circle c) {
-    return c.copyWith(
-      strokeWidthParam: 2,
-      strokeColorParam: Color.lerp(Colors.cyan, Colors.transparent, 0.3),
-      fillColorParam: Color.lerp(Colors.cyan, Colors.transparent, 0.8),
-    );
+  void _onMapTapped(GM.LatLng newPos) {
+    _currentPos = LatLng(newPos.latitude, newPos.longitude);
   }
 }
 
