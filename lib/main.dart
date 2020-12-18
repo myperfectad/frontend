@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import 'homepage/homepage.dart';
+import 'homepage/search_model.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,9 +32,11 @@ class MyApp extends StatelessWidget {
           headline4: GoogleFonts.righteous(),
           headline5: GoogleFonts.righteous(),
           headline6: GoogleFonts.righteous(),
-        )
+        )),
+      home: ChangeNotifierProvider(
+        create: (context) => SearchModel(),
+        child: HomePage(),
       ),
-      home: HomePage(),
     );
   }
 }

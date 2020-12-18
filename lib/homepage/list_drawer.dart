@@ -5,6 +5,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as GM;
+import 'package:myperfectad/homepage/search_model.dart';
+import 'package:provider/provider.dart';
 
 import 'map_dialog.dart';
 
@@ -59,11 +61,23 @@ class GenderCheckBoxes extends StatefulWidget {
 }
 
 class _GenderCheckBoxesState extends State<GenderCheckBoxes> {
-  bool isMale = true;
-  bool isFemale = true;
+  bool isMale;
+  bool isFemale;
+
+  @override
+  void initState() {
+    super.initState();
+
+    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
+
+    isMale = sm.showMale;
+    isFemale = sm.showFemale;
+  }
 
   @override
   Widget build(BuildContext context) {
+    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
+    
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -77,6 +91,7 @@ class _GenderCheckBoxesState extends State<GenderCheckBoxes> {
             setState(() {
               isMale = value;
             });
+            sm.showMale = value;
           },
         ),
         CheckboxListTile(
@@ -89,6 +104,7 @@ class _GenderCheckBoxesState extends State<GenderCheckBoxes> {
             setState(() {
               isFemale = value;
             });
+            sm.showFemale = value;
           },
         ),
       ],
@@ -102,10 +118,20 @@ class AgeSlider extends StatefulWidget {
 }
 
 class _AgeSliderState extends State<AgeSlider> {
-  RangeValues _currentRangeValues = const RangeValues(40, 80);
+  RangeValues _currentRangeValues;
+
+  @override
+  void initState() {
+    super.initState();
+
+    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
+    _currentRangeValues = RangeValues(sm.ageMin as double, sm.ageMax as double);
+  }
 
   @override
   Widget build(BuildContext context) {
+    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
+
     return RangeSlider(
       values: _currentRangeValues,
       min: 0,
@@ -120,6 +146,10 @@ class _AgeSliderState extends State<AgeSlider> {
           _currentRangeValues = values;
         });
       },
+      onChangeEnd: (RangeValues values) {
+        sm.ageMin = values.start.round();
+        sm.ageMax = values.end.round();
+      },
     );
   }
 }
@@ -130,26 +160,25 @@ class MiniMap extends StatefulWidget {
 }
 
 class _MiniMapState extends State<MiniMap> {
-  static final LatLng _kLondonCoords = LatLng(51.5074, 0.1278);
   static final double _kZoom = 5.0;
-  static Marker _buildMarker(LatLng pos) {
-    return Marker(
-      width: 30.0,
-      height: 30.0,
-      point: pos,
-      builder: (context) => Container(
-        // TODO change
-        child: FlutterLogo(),
-      ),
-    );
-  }
 
   final MapController _mapController = MapController();
-  Marker _currentPosMarker = _buildMarker(_kLondonCoords);
-  LatLng _currentPos = _kLondonCoords;
+  Marker _currentPosMarker;
+  LatLng _currentPos;
+
+  @override
+  void initState() {
+    super.initState();
+
+    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
+    _currentPos = sm.location;
+    _currentPosMarker = _buildMarker(sm.location);
+  }
 
   @override
   Widget build(BuildContext context) {
+    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
+
     return GestureDetector(
       onTap: () async {
         await showDialog(
@@ -163,6 +192,7 @@ class _MiniMapState extends State<MiniMap> {
           _currentPosMarker = _buildMarker(_currentPos);
         });
         _mapController.move(_currentPos, _kZoom);
+        sm.location = _currentPos;
       },
       child: SizedBox(
         height: 200.0,
@@ -191,6 +221,18 @@ class _MiniMapState extends State<MiniMap> {
 
   void _onMapTapped(GM.LatLng newPos) {
     _currentPos = LatLng(newPos.latitude, newPos.longitude);
+  }
+
+  Marker _buildMarker(LatLng pos) {
+    return Marker(
+      width: 30.0,
+      height: 30.0,
+      point: pos,
+      builder: (context) => Container(
+        // TODO change
+        child: FlutterLogo(),
+      ),
+    );
   }
 }
 
