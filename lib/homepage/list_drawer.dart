@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
@@ -7,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as GM;
 import 'package:myperfectad/homepage/search_model.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'map_dialog.dart';
 
@@ -38,6 +40,9 @@ class _ListDrawerState extends State<ListDrawer> {
               MiniMap(),
               const SizedBox(height: 16.0),
               CategoriesPicker(),
+              const Divider(),
+              const SizedBox(height: 16.0),
+              Footer(),
             ],
           ),
         ),
@@ -307,6 +312,37 @@ class _CategoryButtonState extends State<CategoryButton> {
     );
   }
 }
+
+class Footer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: '© 2020 My Perfect Ad. Icons by ',
+              style: Theme.of(context).textTheme.bodyText2,
+            ),
+            TextSpan(
+              text: 'Freepik',
+              style: TextStyle(
+                color: Theme.of(context).accentColor,
+                decoration: TextDecoration.underline,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  launch('https://www.flaticon.com/authors/freepik');
+                }
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 @deprecated
 class _ThumbShape extends RoundRangeSliderThumbShape {
