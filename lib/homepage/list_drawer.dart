@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -7,9 +5,9 @@ import 'package:latlong/latlong.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as GM;
 import 'package:myperfectad/homepage/search_model.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../state_with_provider.dart';
 import 'map_dialog.dart';
 
 class ListDrawer extends StatefulWidget {
@@ -65,24 +63,19 @@ class GenderCheckBoxes extends StatefulWidget {
   _GenderCheckBoxesState createState() => _GenderCheckBoxesState();
 }
 
-class _GenderCheckBoxesState extends State<GenderCheckBoxes> {
+class _GenderCheckBoxesState extends StateWithProvider<GenderCheckBoxes, SearchModel> {
   bool isMale;
   bool isFemale;
 
   @override
   void initState() {
     super.initState();
-
-    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
-
-    isMale = sm.showMale;
-    isFemale = sm.showFemale;
+    isMale = provider.showMale;
+    isFemale = provider.showFemale;
   }
 
   @override
   Widget build(BuildContext context) {
-    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
-    
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -96,7 +89,7 @@ class _GenderCheckBoxesState extends State<GenderCheckBoxes> {
             setState(() {
               isMale = value;
             });
-            sm.showMale = value;
+            provider.showMale = value;
           },
         ),
         CheckboxListTile(
@@ -109,7 +102,7 @@ class _GenderCheckBoxesState extends State<GenderCheckBoxes> {
             setState(() {
               isFemale = value;
             });
-            sm.showFemale = value;
+            provider.showFemale = value;
           },
         ),
       ],
@@ -122,21 +115,17 @@ class AgeSlider extends StatefulWidget {
   _AgeSliderState createState() => _AgeSliderState();
 }
 
-class _AgeSliderState extends State<AgeSlider> {
+class _AgeSliderState extends StateWithProvider<AgeSlider, SearchModel> {
   RangeValues _currentRangeValues;
 
   @override
   void initState() {
     super.initState();
-
-    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
-    _currentRangeValues = RangeValues(sm.ageMin as double, sm.ageMax as double);
+    _currentRangeValues = RangeValues(provider.ageMin as double, provider.ageMax as double);
   }
 
   @override
   Widget build(BuildContext context) {
-    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
-
     return RangeSlider(
       values: _currentRangeValues,
       min: 0,
@@ -152,8 +141,8 @@ class _AgeSliderState extends State<AgeSlider> {
         });
       },
       onChangeEnd: (RangeValues values) {
-        sm.ageMin = values.start.round();
-        sm.ageMax = values.end.round();
+        provider.ageMin = values.start.round();
+        provider.ageMax = values.end.round();
       },
     );
   }
@@ -164,7 +153,7 @@ class MiniMap extends StatefulWidget {
   _MiniMapState createState() => _MiniMapState();
 }
 
-class _MiniMapState extends State<MiniMap> {
+class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
   static final double _kZoom = 5.0;
 
   final MapController _mapController = MapController();
@@ -174,16 +163,12 @@ class _MiniMapState extends State<MiniMap> {
   @override
   void initState() {
     super.initState();
-
-    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
-    _currentPos = sm.location;
-    _currentPosMarker = _buildMarker(sm.location);
+    _currentPos = provider.location;
+    _currentPosMarker = _buildMarker(provider.location);
   }
 
   @override
   Widget build(BuildContext context) {
-    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
-
     return GestureDetector(
       onTap: () async {
         await showDialog(
@@ -197,7 +182,7 @@ class _MiniMapState extends State<MiniMap> {
           _currentPosMarker = _buildMarker(_currentPos);
         });
         _mapController.move(_currentPos, _kZoom);
-        sm.location = _currentPos;
+        provider.location = _currentPos;
       },
       child: SizedBox(
         height: 200.0,
@@ -277,20 +262,17 @@ class CategoryButton extends StatefulWidget {
   _CategoryButtonState createState() => _CategoryButtonState();
 }
 
-class _CategoryButtonState extends State<CategoryButton> {
+class _CategoryButtonState extends StateWithProvider<CategoryButton, SearchModel> {
   bool isSelected;
 
   @override
   void initState() {
     super.initState();
-    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
-    isSelected = sm.hasCategory(widget.category);
+    isSelected = provider.hasCategory(widget.category);
   }
 
   @override
   Widget build(BuildContext context) {
-    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
-
     return Tooltip(
       message: widget.category.name,
       child: InkWell(
@@ -303,9 +285,9 @@ class _CategoryButtonState extends State<CategoryButton> {
             isSelected = !isSelected;
           });
           if (isSelected) {
-            sm.addCategory(widget.category);
+            provider.addCategory(widget.category);
           } else {
-            sm.removeCategory(widget.category);
+            provider.removeCategory(widget.category);
           }
         },
       ),
