@@ -225,13 +225,10 @@ class _MiniMapState extends State<MiniMap> {
 
   Marker _buildMarker(LatLng pos) {
     return Marker(
-      width: 30.0,
-      height: 30.0,
+      width: 32.0,
+      height: 32.0,
       point: pos,
-      builder: (context) => Container(
-        // TODO change
-        child: FlutterLogo(),
-      ),
+      builder: (context) => Image.asset('images/circular-target.png'),
     );
   }
 }
