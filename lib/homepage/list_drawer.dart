@@ -31,13 +31,16 @@ class _ListDrawerState extends State<ListDrawer> {
               ),
               const Divider(),
               // const SizedBox(height: 16.0),
-              GenderCheckBoxes(),
+              ArrowDownTo(text: 'Choose yo\' self', child: GenderCheckBoxes()),
               // const SizedBox(height: 16.0),
-              AgeSlider(),
+              ArrowDownTo(text: 'Age', child: AgeSlider(), spacing: 36.0,),
+              // const SizedBox(height: 16.0),
+              ArrowDownTo(text: 'Where', child: MiniMap(), spacing: 36.0,),
               const SizedBox(height: 16.0),
-              MiniMap(),
-              const SizedBox(height: 16.0),
+              Text('What?', style: Theme.of(context).textTheme.headline4),
               CategoriesPicker(),
+              const SizedBox(height: 16.0),
+              Text('About?', style: Theme.of(context).textTheme.headline4),
               const Divider(),
               const SizedBox(height: 16.0),
               Footer(),
@@ -60,9 +63,10 @@ class _ListDrawerState extends State<ListDrawer> {
 
 class ArrowDownTo extends StatelessWidget {
   final String text;
-  final Widget over;
+  final Widget child;
+  final double spacing;
 
-  const ArrowDownTo({Key key, @required this.text, @required this.over})
+  const ArrowDownTo({Key key, @required this.text, @required this.child, this.spacing = 32.0})
       : super(key: key);
 
   @override
@@ -71,8 +75,8 @@ class ArrowDownTo extends StatelessWidget {
       children: [
         Column(
           children: [
-            const SizedBox(height: 32.0),
-            over,
+            SizedBox(height: spacing),
+            child,
           ],
         ),
         Row(
@@ -89,6 +93,7 @@ class ArrowDownTo extends StatelessWidget {
                 Image.asset(
                   'images/arrow-top.png',
                   scale: 1.2,
+                  // color: Theme.of(context).accentColor,
                 ),
               ],
             ),
@@ -117,7 +122,7 @@ class _GenderCheckBoxesState extends StateWithProvider<GenderCheckBoxes, SearchM
 
   @override
   Widget build(BuildContext context) {
-    Widget w =  Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CheckboxListTile(
@@ -148,7 +153,6 @@ class _GenderCheckBoxesState extends StateWithProvider<GenderCheckBoxes, SearchM
         ),
       ],
     );
-    return ArrowDownTo(text: 'Choose yo\' self', over: w);
   }
 }
 
