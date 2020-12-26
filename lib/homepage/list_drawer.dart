@@ -175,7 +175,7 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () async {
         await showDialog(
             context: context,

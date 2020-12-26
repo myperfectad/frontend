@@ -36,21 +36,21 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
           : null,
       actions: [
         // TODO
-        IconButton(
-          icon: const Icon(Icons.share),
-          tooltip: 'Share',
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.favorite),
-          tooltip: 'Favorite',
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.search),
-          tooltip: 'Search',
-          onPressed: () {},
-        ),
+        // IconButton(
+        //   icon: const Icon(Icons.share),
+        //   tooltip: 'Share',
+        //   onPressed: () {},
+        // ),
+        // IconButton(
+        //   icon: const Icon(Icons.favorite),
+        //   tooltip: 'Favorite',
+        //   onPressed: () {},
+        // ),
+        // IconButton(
+        //   icon: const Icon(Icons.search),
+        //   tooltip: 'Search',
+        //   onPressed: () {},
+        // ),
       ],
     );
   }
