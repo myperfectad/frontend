@@ -25,7 +25,7 @@ class _ListDrawerState extends State<ListDrawer> {
           child: ListView(
             children: [
               Image.asset(
-                'images/logo.png',
+                'images/logo2.png',
                 height: 96.0,
                 alignment: Alignment.centerLeft,
               ),
@@ -58,6 +58,47 @@ class _ListDrawerState extends State<ListDrawer> {
   }
 }
 
+class ArrowDownTo extends StatelessWidget {
+  final String text;
+  final Widget over;
+
+  const ArrowDownTo({Key key, @required this.text, @required this.over})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Column(
+          children: [
+            const SizedBox(height: 32.0),
+            over,
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              text,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            const SizedBox(width: 16.0),
+            Column(
+              children: [
+                const SizedBox(height: 12.0),
+                Image.asset(
+                  'images/arrow-top.png',
+                  scale: 1.2,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class GenderCheckBoxes extends StatefulWidget {
   @override
   _GenderCheckBoxesState createState() => _GenderCheckBoxesState();
@@ -76,13 +117,13 @@ class _GenderCheckBoxesState extends StateWithProvider<GenderCheckBoxes, SearchM
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    Widget w =  Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CheckboxListTile(
-          title: Text('Male'),
+          // title: Text('Male'),
           controlAffinity: ListTileControlAffinity.leading,
-          secondary: FaIcon(FontAwesomeIcons.male, color: isMale ? Theme.of(context).accentColor : null),
+          title: FaIcon(FontAwesomeIcons.male, color: isMale ? Theme.of(context).accentColor : null),
           value: isMale,
           activeColor: Colors.cyan,
           onChanged: (value) {
@@ -93,9 +134,9 @@ class _GenderCheckBoxesState extends StateWithProvider<GenderCheckBoxes, SearchM
           },
         ),
         CheckboxListTile(
-          title: Text('Female'),
+          // title: Text('Female'),
           controlAffinity: ListTileControlAffinity.leading,
-          secondary: FaIcon(FontAwesomeIcons.female, color: isFemale ? Theme.of(context).accentColor : null),
+          title: FaIcon(FontAwesomeIcons.female, color: isFemale ? Theme.of(context).accentColor : null),
           value: isFemale,
           activeColor: Colors.cyan,
           onChanged: (value) {
@@ -107,6 +148,7 @@ class _GenderCheckBoxesState extends StateWithProvider<GenderCheckBoxes, SearchM
         ),
       ],
     );
+    return ArrowDownTo(text: 'Choose yo\' self', over: w);
   }
 }
 

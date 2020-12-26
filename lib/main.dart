@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'homepage/homepage.dart';
@@ -26,12 +25,10 @@ class MyApp extends StatelessWidget {
         // ),
         fontFamily: 'OpenSans',
         textTheme: TextTheme(
-          headline1: GoogleFonts.righteous(),
-          headline2: GoogleFonts.righteous(),
-          headline3: GoogleFonts.righteous(),
-          headline4: GoogleFonts.righteous(),
-          headline5: GoogleFonts.righteous(),
-          headline6: GoogleFonts.righteous(),
+          headline1: TextStyle(fontFamily: 'RingBells', color: Colors.white),
+          headline2: TextStyle(fontFamily: 'RingBells', color: Colors.white),
+          headline3: TextStyle(fontFamily: 'RingBells', color: Colors.white),
+          headline4: TextStyle(fontFamily: 'RingBells', color: Colors.white),
         )),
       home: ChangeNotifierProvider(
         create: (context) => SearchModel(),

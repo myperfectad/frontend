@@ -55,7 +55,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/logo.png
+    - images/logo2.png
     - images/book.png
     - images/cinema.png
     - images/confetti.png
@@ -65,6 +65,7 @@ flutter:
     - images/toolbox.png
     - images/town.png
     - images/circular-target.png
+    - images/arrow-top.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -87,6 +88,9 @@ flutter:
     - family: OpenSans
       fonts:
         - asset: fonts/OpenSans-Regular.ttf
+    - family: RingBells
+      fonts:
+        - asset: fonts/RingBells.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
