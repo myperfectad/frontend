@@ -157,14 +157,20 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
   static final double _kZoom = 5.0;
 
   final MapController _mapController = MapController();
+
   Marker _currentPosMarker;
+  CircleMarker _currentRangeCircle;
+
   LatLng _currentPos;
+  double _currentRange;
 
   @override
   void initState() {
     super.initState();
     _currentPos = provider.location;
+    _currentRange = provider.range;
     _currentPosMarker = _buildMarker(provider.location);
+    _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
   }
 
   @override
@@ -176,13 +182,18 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
             builder: (context) {
               return MapDialog(
                   GM.LatLng(_currentPos.latitude, _currentPos.longitude),
-                  _onMapTapped);
+                  _currentRange,
+                  _onMapTapped,
+                  _onRangeChanged,
+              );
             });
         setState(() {
           _currentPosMarker = _buildMarker(_currentPos);
+          _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
         });
         _mapController.move(_currentPos, _kZoom);
         provider.location = _currentPos;
+        provider.range = _currentRange;
       },
       child: SizedBox(
         height: 200.0,
@@ -198,6 +209,12 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
                 urlTemplate:
                     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 subdomains: ['a', 'b', 'c']),
+            // circle comes BEFORE marker
+            CircleLayerOptions(
+                circles: [
+                  _currentRangeCircle,
+                ]
+            ),
             MarkerLayerOptions(
               markers: [
                 _currentPosMarker,
@@ -213,12 +230,27 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
     _currentPos = LatLng(newPos.latitude, newPos.longitude);
   }
 
+  void _onRangeChanged(double range) {
+    _currentRange = range;
+  }
+
   Marker _buildMarker(LatLng pos) {
     return Marker(
       width: 32.0,
       height: 32.0,
       point: pos,
       builder: (context) => Image.asset('images/circular-target.png'),
+    );
+  }
+
+  CircleMarker _buildCircle(LatLng pos, double radius) {
+    return CircleMarker(
+      radius: radius,
+      point: pos,
+      useRadiusInMeter: true,
+      color: Color.lerp(Colors.cyan, Colors.transparent, 0.5),
+      // borderStrokeWidth: 2.0,
+      // borderColor: Colors.cyan,
     );
   }
 }

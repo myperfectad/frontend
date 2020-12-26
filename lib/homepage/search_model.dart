@@ -77,6 +77,7 @@ class SearchModel extends ChangeNotifier {
   bool _showFemale = true;
   int _ageMin = 18;
   int _ageMax = 60;
+  double _range = 50000; // in meters
   LatLng _location = kLondonCoords;
   final Set<Category> _categories = {};
 
@@ -127,5 +128,12 @@ class SearchModel extends ChangeNotifier {
 
   bool hasCategory(Category category) {
     return _categories.contains(category);
+  }
+
+  double get range => _range;
+
+  set range(double value) {
+    _range = value;
+    notifyListeners();
   }
 }

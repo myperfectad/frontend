@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapDialog extends StatefulWidget {
-  MapDialog(this.initialPos, this.onMapTapped, {Key key}) : super(key: key);
+  MapDialog(this.initialPos, this.initialRange, this.onMapTapped, this.onRangeChanged, {Key key}) : super(key: key);
 
   final LatLng initialPos;
+  final double initialRange;
   final void Function(LatLng) onMapTapped;
+  final void Function(double) onRangeChanged;
 
   @override
   _MapDialogState createState() => _MapDialogState();
@@ -14,7 +16,13 @@ class MapDialog extends StatefulWidget {
 class _MapDialogState extends State<MapDialog> {
   Marker _currentPosMarker;
   Circle _currentRangeCircle;
-  double _currentRangeKm = 20;
+  double _currentRangeKm;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentRangeKm = widget.initialRange / 1000.0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +56,8 @@ class _MapDialogState extends State<MapDialog> {
           ),
           const SizedBox(height: 16.0),
           Slider(
-            value: _currentRangeKm,
+            // clamp just in case
+            value: _currentRangeKm.clamp(1, 100),
             min: 1,
             max: 100,
             divisions: 99,
@@ -63,6 +72,7 @@ class _MapDialogState extends State<MapDialog> {
                   radius: _currentRangeKm * 1000,
                 ));
               });
+              widget.onRangeChanged(_currentRangeKm * 1000);
             },
           ),
         ],
@@ -86,9 +96,9 @@ class _MapDialogState extends State<MapDialog> {
 
   Circle _styleCircle(Circle c) {
     return c.copyWith(
-      strokeWidthParam: 2,
-      strokeColorParam: Color.lerp(Colors.cyan, Colors.transparent, 0.3),
-      fillColorParam: Color.lerp(Colors.cyan, Colors.transparent, 0.8),
+      strokeWidthParam: 0,
+      // strokeColorParam: Color.lerp(Colors.cyan, Colors.transparent, 0.3),
+      fillColorParam: Color.lerp(Colors.cyan, Colors.transparent, 0.5),
     );
   }
 }
