@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
+import 'package:http/http.dart' as http;
+
+import 'homepage.dart';
 
 final LatLng kLondonCoords = LatLng(51.509865, -0.118092);
 
@@ -80,50 +85,55 @@ class SearchModel extends ChangeNotifier {
   double _range = 50000; // in meters
   LatLng _location = kLondonCoords;
   final Set<Category> _categories = {};
+  Future<List<Ad>> _futureAds;
+
+  SearchModel() {
+    _futureAds = _fetchAds();
+  }
 
   bool get showMale => _showMale;
 
   set showMale(bool value) {
     _showMale = value;
-    notifyListeners();
+    _reFetch();
   }
 
   bool get showFemale => _showFemale;
 
   set showFemale(bool value) {
     _showFemale = value;
-    notifyListeners();
+    _reFetch();
   }
 
   LatLng get location => _location;
 
   set location(LatLng value) {
     _location = value;
-    notifyListeners();
+    _reFetch();
   }
 
   int get ageMax => _ageMax;
 
   set ageMax(int value) {
     _ageMax = value;
-    notifyListeners();
+    _reFetch();
   }
 
   int get ageMin => _ageMin;
 
   set ageMin(int value) {
     _ageMin = value;
-    notifyListeners();
+    _reFetch();
   }
   
   void addCategory(Category category) {
     _categories.add(category);
-    notifyListeners();
+    _reFetch();
   }
 
   void removeCategory(Category category) {
     _categories.remove(category);
-    notifyListeners();
+    _reFetch();
   }
 
   bool hasCategory(Category category) {
@@ -134,6 +144,56 @@ class SearchModel extends ChangeNotifier {
 
   set range(double value) {
     _range = value;
+    _reFetch();
+  }
+  
+  Future<List<Ad>> get futureAds => _futureAds;
+
+  // TODO send filters
+  Future<List<Ad>> _fetchAds() async {
+    final response = await http.get(ENDPOINT);
+    // debugPrint(response.statusCode.toString());
+
+    if (response.statusCode == 200) {
+      return _parseAds(response.body);
+    }
+    else {
+      throw Exception('Failed to load');
+    }
+  }
+
+  List<Ad> _parseAds(String body) {
+    List<dynamic> jsonArray = jsonDecode(body);
+    return jsonArray.map<Ad>((json) {
+      // debugPrint(json.toString());
+      return Ad.fromJson(json);
+    }).toList();
+  }
+
+  void _reFetch() {
+    _futureAds = _fetchAds();
     notifyListeners();
+  }
+}
+
+class Ad {
+  final String id;
+  final String title;
+  final String desc;
+  final String link;
+  final String imageUrl;
+  final String createdAt;
+
+  Ad({this.id, this.title, this.desc, this.link, this.imageUrl, this.createdAt});
+
+  factory Ad.fromJson(Map<String, dynamic> json) {
+    return Ad(
+      id: json['_id'],
+      title: json['title'],
+      desc: json['description'],
+      link: json['link'],
+      imageUrl: json['img'],
+      createdAt: json['createdAt'],
+    );
   }
 }
