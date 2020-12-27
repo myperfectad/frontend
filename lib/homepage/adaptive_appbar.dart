@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const appBarDesktopHeight = 110.0;
+const appBarDesktopHeight = 105.0;
 const appBarMobileHeight = 100.0;
 
 class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -18,50 +18,56 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: !isDesktop,
-      centerTitle: isDesktop,
-      title: Text('My Perfect Ad!',
-          style: isDesktop
-              ? Theme.of(context).textTheme.headline3
-              : Theme.of(context).textTheme.headline4),
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(26),
-        child: Container(
-          alignment: AlignmentDirectional.centerStart,
-          margin: isDesktop
-              ? const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 12)
-              : const EdgeInsetsDirectional.fromSTEB(8.0, 0, 0, 4.0),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.share),
-                tooltip: 'Share',
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.favorite),
-                tooltip: 'Favorite',
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.search),
-                tooltip: 'Search',
-                onPressed: () {},
-              ),
-            ],
-          ),
+    return DefaultTabController(
+      length: 4,
+      child: AppBar(
+        automaticallyImplyLeading: !isDesktop,
+        centerTitle: isDesktop,
+        title: Text('My Perfect Ad!',
+            style: isDesktop
+                ? Theme.of(context).textTheme.headline3
+                : Theme.of(context).textTheme.headline4),
+        bottom: TabBar(
+          tabs: [
+            Tab(
+              icon: isDesktop ? null : Icon(Icons.leaderboard),
+              child: _tabContent('Top', Icons.leaderboard)
+            ),
+            Tab(
+              icon: isDesktop ? null : Icon(Icons.whatshot),
+              child: _tabContent('Trending', Icons.whatshot),
+            ),
+            Tab(
+              icon: isDesktop ? null : Icon(Icons.new_releases),
+              child: _tabContent('Latest', Icons.new_releases)
+            ),
+            Tab(
+              icon: isDesktop ? null : Icon(Icons.elderly),
+              child: _tabContent('Oldest', Icons.elderly),
+            ),
+          ],
         ),
+        actions: [
+          // advertiser console not available on mobile
+          if (isDesktop)
+            IconButton(
+              icon: const Icon(Icons.login),
+              tooltip: 'Advertiser Login',
+              onPressed: () {},
+            ),
+        ],
       ),
-      actions: [
-        // advertiser console not available on mobile
-        if (isDesktop)
-          IconButton(
-            icon: const Icon(Icons.login),
-            tooltip: 'Advertiser Login',
-            onPressed: () {},
-          ),
-      ],
     );
+  }
+
+  Widget _tabContent(String text, IconData iconData) {
+    return isDesktop ? Row (
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(text),
+        const SizedBox(width: 8.0,),
+        Icon(iconData),
+      ],
+    ) : null;
   }
 }
