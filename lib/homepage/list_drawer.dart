@@ -73,11 +73,9 @@ class ArrowDownTo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Column(
-          children: [
-            SizedBox(height: spacing),
-            child,
-          ],
+        Padding(
+          padding: EdgeInsets.only(top: spacing),
+          child: child,
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,15 +85,13 @@ class ArrowDownTo extends StatelessWidget {
               style: Theme.of(context).textTheme.headline4,
             ),
             const SizedBox(width: 16.0),
-            Column(
-              children: [
-                const SizedBox(height: 12.0),
-                Image.asset(
-                  'images/arrow-top.png',
-                  scale: 1.2,
-                  // color: Theme.of(context).accentColor,
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: Image.asset(
+                'images/arrow-top.png',
+                scale: 1.2,
+                // color: Theme.of(context).accentColor,
+              ),
             ),
           ],
         ),
