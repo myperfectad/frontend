@@ -10,12 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../state_with_provider.dart';
 import 'map_dialog.dart';
 
-class ListDrawer extends StatefulWidget {
-  @override
-  _ListDrawerState createState() => _ListDrawerState();
-}
-
-class _ListDrawerState extends State<ListDrawer> {
+class ListDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final drawer = Drawer(
@@ -35,12 +30,12 @@ class _ListDrawerState extends State<ListDrawer> {
               // const SizedBox(height: 16.0),
               ArrowDownTo(text: 'Age', child: AgeSlider(), spacing: 36.0,),
               // const SizedBox(height: 16.0),
-              ArrowDownTo(text: 'Where', child: MiniMap(), spacing: 36.0,),
+              ArrowDownTo(text: 'Location', child: MiniMap(), spacing: 36.0,),
               const SizedBox(height: 16.0),
-              Text('What?', style: Theme.of(context).textTheme.headline4),
+              Text('What type?', style: Theme.of(context).textTheme.headline4),
               CategoriesPicker(),
               const SizedBox(height: 16.0),
-              Text('About?', style: Theme.of(context).textTheme.headline4),
+              Text('What do you love?', style: Theme.of(context).textTheme.headline4),
               const Divider(),
               const SizedBox(height: 16.0),
               Footer(),

@@ -23,10 +23,24 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         automaticallyImplyLeading: !isDesktop,
         centerTitle: isDesktop,
-        title: Text('My Perfect Ad!',
-            style: isDesktop
-                ? Theme.of(context).textTheme.headline3
-                : Theme.of(context).textTheme.headline4),
+        title: isDesktop
+            ? Text('Find Your Perfect Ad',
+                style: Theme.of(context).textTheme.headline3)
+              // otherwise too far to menu button
+            : Transform.translate(
+                offset: const Offset(-24.0, 0.0),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'images/arrow-left.png',
+                      scale: 1.5,
+                    ),
+                    const SizedBox(width: 8.0),
+                    Text('Find Your Perfect Ad ', // note space at end
+                        style: Theme.of(context).textTheme.headline4),
+                  ],
+                ),
+              ),
         bottom: TabBar(
           tabs: [
             Tab(
