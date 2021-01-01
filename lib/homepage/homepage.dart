@@ -65,7 +65,7 @@ class ScrollContent extends StatelessWidget {
         itemCount: 40,
         itemBuilder: (context, index) {
           return GridNode(
-            link: 'https:google.co.uk',
+            link: 'https://google.co.uk',
             imageUrl: demos[index],
           );
         },
