@@ -164,8 +164,8 @@ class SearchModel extends ChangeNotifier {
   }
 
   List<Ad> _parseAds(String body) {
-    List<dynamic> jsonArray = jsonDecode(body);
-    return jsonArray.map<Ad>((json) {
+    var json = jsonDecode(body);
+    return json['ads'].map<Ad>((json) {
       // debugPrint(json.toString());
       return Ad.fromJson(json);
     }).toList();
@@ -184,16 +184,17 @@ class Ad {
   final String link;
   final String imageUrl;
   final String createdAt;
+  final String tags;
 
-  Ad({this.id, this.title, this.desc, this.link, this.imageUrl, this.createdAt});
+  Ad({this.id, this.title, this.desc, this.link, this.imageUrl, this.createdAt, this.tags});
 
   factory Ad.fromJson(Map<String, dynamic> json) {
     return Ad(
       id: json['_id'],
       title: json['title'],
       desc: json['description'],
-      link: json['link'],
-      imageUrl: json['img'],
+      link: json['linkUrl'],
+      imageUrl: json['photoUrl'],
       createdAt: json['createdAt'],
     );
   }

@@ -69,6 +69,7 @@ class ScrollContent extends StatelessWidget {
                     desc: ad.desc,
                     link: ad.link,
                     imageUrl: ad.imageUrl,
+                    tags: ad.tags,
                   );
                 }).toList(),
               );
@@ -90,13 +91,15 @@ class GridNode extends StatelessWidget {
   final String desc;
   final String link;
   final String imageUrl;
+  final String tags;
 
-  const GridNode({Key key, this.title, this.desc, this.link, this.imageUrl}) : super(key: key);
+  const GridNode({Key key, this.title, this.desc, this.link, this.imageUrl, this.tags}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: '$title: $desc',
+      message: '$link'
+          '${tags != null ? '\n$tags' : ''}',
       child: InkWell(
         onTap: () {
           launch(link);
