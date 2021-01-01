@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myperfectad/homepage/search_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,10 +24,12 @@ class ListDrawer extends StatelessWidget {
               // const SizedBox(height: 16.0),
               ArrowDownTo(text: 'Choose yo\' self', child: GenderCheckBoxes()),
               // const SizedBox(height: 16.0),
-              ArrowDownTo(text: 'Age', child: AgeSlider(), spacing: 36.0,),
+              Text('Age', style: Theme.of(context).textTheme.headline4),
+              AgeSlider(),
               // const SizedBox(height: 16.0),
-              ArrowDownTo(text: 'Location', child: MiniMap(), spacing: 36.0,),
-              const SizedBox(height: 16.0),
+              Text('Location', style: Theme.of(context).textTheme.headline4),
+              MiniMap(),
+              // const SizedBox(height: 16.0),
               Text('What type?', style: Theme.of(context).textTheme.headline4),
               CategoriesPicker(),
               const SizedBox(height: 16.0),
@@ -58,7 +59,7 @@ class ArrowDownTo extends StatelessWidget {
   final Widget child;
   final double spacing;
 
-  const ArrowDownTo({Key key, @required this.text, @required this.child, this.spacing = 32.0})
+  const ArrowDownTo({Key key, @required this.text, @required this.child, this.spacing = 48.0})
       : super(key: key);
 
   @override
@@ -76,7 +77,7 @@ class ArrowDownTo extends StatelessWidget {
               text,
               style: Theme.of(context).textTheme.headline4,
             ),
-            const SizedBox(width: 16.0),
+            const SizedBox(width: 48.0),
             Padding(
               padding: const EdgeInsets.only(top: 12.0),
               child: Image.asset(
@@ -110,33 +111,33 @@ class _GenderCheckBoxesState extends StateWithProvider<GenderCheckBoxes, SearchM
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        CheckboxListTile(
-          // title: Text('Male'),
-          controlAffinity: ListTileControlAffinity.leading,
-          title: FaIcon(FontAwesomeIcons.male, color: isMale ? Theme.of(context).accentColor : null),
-          value: isMale,
-          activeColor: Colors.cyan,
-          onChanged: (value) {
+        InkWell(
+          child: Image.asset(
+            'images/boy.png',
+            scale: 1.7,
+            color: isMale ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+          ),
+          onTap: () {
             setState(() {
-              isMale = value;
+              isMale = !isMale;
+              provider.showMale = isMale;
             });
-            provider.showMale = value;
           },
         ),
-        CheckboxListTile(
-          // title: Text('Female'),
-          controlAffinity: ListTileControlAffinity.leading,
-          title: FaIcon(FontAwesomeIcons.female, color: isFemale ? Theme.of(context).accentColor : null),
-          value: isFemale,
-          activeColor: Colors.cyan,
-          onChanged: (value) {
+        InkWell(
+          child: Image.asset(
+            'images/girl.png',
+            scale: 1.7,
+            color: isFemale ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+          ),
+          onTap: () {
             setState(() {
-              isFemale = value;
+              isFemale = !isFemale;
+              provider.showFemale = isFemale;
             });
-            provider.showFemale = value;
           },
         ),
       ],
