@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../image_shadow.dart';
 import '../state_with_provider.dart';
 import 'minimap.dart';
+import 'tags.dart';
 
 class ListDrawer extends StatelessWidget {
   @override
@@ -35,6 +36,7 @@ class ListDrawer extends StatelessWidget {
               CategoriesPicker(),
               const SizedBox(height: 16.0),
               Text('What do you love?', style: Theme.of(context).textTheme.headline4),
+              Tags(),
               const Divider(),
               const SizedBox(height: 16.0),
               Footer(),
