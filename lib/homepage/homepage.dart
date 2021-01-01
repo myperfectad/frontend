@@ -53,36 +53,17 @@ class ScrollContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Consumer<SearchModel>(builder: (subContext, searchModel, child) {
-        return FutureBuilder(
-          future: searchModel.futureAds,
-          builder: (context, snapshot) {
-            // debugPrint('Loading future data...');
-
-            if (snapshot.hasData) {
-              // TODO should probably change to builder
-              return GridView.count(
-                // adaptive count. Count is always 2 on mobile
-                crossAxisCount: isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
-                children: snapshot.data.map<GridNode>((Ad ad) {
-                  return GridNode(
-                    title: ad.title,
-                    desc: ad.desc,
-                    link: ad.link,
-                    imageUrl: ad.imageUrl,
-                    tags: ad.tags,
-                  );
-                }).toList(),
-              );
-            } else if (snapshot.hasError) {
-              return Center(child: Text(snapshot.error.toString()));
-            }
-
-            // By default, show a loading spinner.
-            return Center(child: SpinKitFadingFour(color: Theme.of(context).accentColor));
-          },
-        );
-      });
+      return GridView.count(
+        // adaptive count. Count is always 2 on mobile
+        crossAxisCount: isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
+        children: List.generate(40, (index) {
+          return GridNode(
+            link: 'https:google.co.uk',
+            imageUrl:
+                'images/demo/demo-${index + 1}.${index == 11 ? 'png' : 'jpg'}',
+          );
+        }).toList(),
+      );
     });
   }
 }
@@ -106,7 +87,7 @@ class GridNode extends StatelessWidget {
           launch(link);
         },
         child: imageUrl != null
-            ? Image.network(
+            ? Image.asset(
           imageUrl,
           // crops to square
           fit: BoxFit.cover,

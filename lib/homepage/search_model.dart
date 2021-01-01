@@ -172,8 +172,8 @@ class SearchModel extends ChangeNotifier {
   }
 
   void _reFetch() {
-    _futureAds = _fetchAds();
-    notifyListeners();
+    // _futureAds = _fetchAds();
+    // notifyListeners();
   }
 }
 
