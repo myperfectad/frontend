@@ -22,73 +22,93 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
 
   LatLng _currentPos;
   double _currentRange;
+  int _currentRangeKm;
 
   @override
   void initState() {
     super.initState();
     _currentPos = provider.location;
     _currentRange = provider.range;
+    _currentRangeKm = (_currentRange / 1000).round();
     _currentPosMarker = _buildMarker(provider.location);
     _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
   }
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        await showDialog(
-            context: context,
-            builder: (context) {
-              return MapDialog(
-                GM.LatLng(_currentPos.latitude, _currentPos.longitude),
-                _currentRange,
-                _onMapTapped,
-                _onRangeChanged,
-              );
+    return Column(
+      children: [
+        InkWell(
+          onTap: () async {
+            await showDialog(
+                context: context,
+                builder: (context) {
+                  return MapDialog(
+                    GM.LatLng(_currentPos.latitude, _currentPos.longitude),
+                    _onMapTapped,
+                  );
+                });
+            setState(() {
+              _currentPosMarker = _buildMarker(_currentPos);
+              _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
             });
+            _mapController.move(_currentPos, _kZoom);
+            provider.location = _currentPos;
+          },
+          child: _map(),
+        ),
+        _rangeSlider(),
+      ],
+    );
+  }
+
+  Widget _map() {
+    return SizedBox(
+      height: 200.0,
+      child: FlutterMap(
+        mapController: _mapController,
+        options: MapOptions(
+          center: _currentPos,
+          zoom: _kZoom,
+          interactive: false,
+        ),
+        layers: [
+          TileLayerOptions(
+              urlTemplate:
+              "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              subdomains: ['a', 'b', 'c']),
+          // circle comes BEFORE marker
+          CircleLayerOptions(
+            circles: [_currentRangeCircle],
+          ),
+          MarkerLayerOptions(
+            markers: [_currentPosMarker],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _rangeSlider() {
+    return Slider(
+      // clamp just in case
+      value: _currentRangeKm.clamp(1, 100),
+      min: 1,
+      max: 100,
+      divisions: 99,
+      label: '${_currentRangeKm.toString()} km',
+      onChanged: (double value) {
         setState(() {
-          _currentPosMarker = _buildMarker(_currentPos);
+          _currentRangeKm = value.round();
+          _currentRange = value * 1000;
           _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
         });
-        _mapController.move(_currentPos, _kZoom);
-        provider.location = _currentPos;
-        provider.range = _currentRange;
       },
-      child: SizedBox(
-        height: 200.0,
-        child: FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            center: _currentPos,
-            zoom: _kZoom,
-            interactive: false,
-          ),
-          layers: [
-            TileLayerOptions(
-                urlTemplate:
-                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                subdomains: ['a', 'b', 'c']),
-            // circle comes BEFORE marker
-            CircleLayerOptions(circles: [
-              _currentRangeCircle,
-            ]),
-            MarkerLayerOptions(
-              markers: [
-                _currentPosMarker,
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   void _onMapTapped(GM.LatLng newPos) {
     _currentPos = LatLng(newPos.latitude, newPos.longitude);
-  }
-
-  void _onRangeChanged(double range) {
-    _currentRange = range;
   }
 
   Marker _buildMarker(LatLng pos) {
