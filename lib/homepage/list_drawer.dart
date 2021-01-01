@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myperfectad/homepage/search_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../image_shadow.dart';
 import '../state_with_provider.dart';
 import 'minimap.dart';
 
@@ -114,11 +115,16 @@ class _GenderCheckBoxesState extends StateWithProvider<GenderCheckBoxes, SearchM
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        // this is really not clean. But hey, it works, and nothing really depends on this, so yeah
         InkWell(
-          child: Image.asset(
-            'images/boy.png',
+          child: ImageShadow(
+            path: 'images/boy.png',
             scale: 1.7,
-            color: isMale ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+            child: Image.asset(
+              'images/boy.png',
+              scale: 1.7,
+              color: isMale ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+            ),
           ),
           onTap: () {
             setState(() {
@@ -128,10 +134,14 @@ class _GenderCheckBoxesState extends StateWithProvider<GenderCheckBoxes, SearchM
           },
         ),
         InkWell(
-          child: Image.asset(
-            'images/girl.png',
+          child: ImageShadow(
+            path: 'images/girl.png',
             scale: 1.7,
-            color: isFemale ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+            child: Image.asset(
+              'images/girl.png',
+              scale: 1.7,
+              color: isFemale ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+            ),
           ),
           onTap: () {
             setState(() {
