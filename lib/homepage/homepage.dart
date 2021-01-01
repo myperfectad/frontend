@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../layout.dart';
 import 'adaptive_appbar.dart';
@@ -106,8 +107,9 @@ class GridNode extends StatelessWidget {
           launch(link);
         },
         child: imageUrl != null
-            ? Image.network(
-          imageUrl,
+            ? FadeInImage.memoryNetwork(
+          image: imageUrl,
+          placeholder: kTransparentImage,
           // crops to square
           fit: BoxFit.cover,
         )
