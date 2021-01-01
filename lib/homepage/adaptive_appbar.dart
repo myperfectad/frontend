@@ -19,7 +19,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: AppBar(
         automaticallyImplyLeading: !isDesktop,
         centerTitle: isDesktop,
@@ -44,10 +44,6 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
         bottom: TabBar(
           tabs: [
             Tab(
-              icon: isDesktop ? null : Icon(Icons.leaderboard),
-              child: _tabContent('Top', Icons.leaderboard)
-            ),
-            Tab(
               icon: isDesktop ? null : Icon(Icons.whatshot),
               child: _tabContent('Trending', Icons.whatshot),
             ),
@@ -56,8 +52,16 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: _tabContent('Latest', Icons.new_releases)
             ),
             Tab(
-              icon: isDesktop ? null : Icon(Icons.elderly),
-              child: _tabContent('Oldest', Icons.elderly),
+                icon: isDesktop ? null : Icon(Icons.leaderboard),
+                child: _tabContent('Top', Icons.leaderboard)
+            ),
+            Tab(
+              icon: isDesktop ? null : Icon(Icons.shuffle),
+              child: _tabContent('Random', Icons.shuffle),
+            ),
+            Tab(
+              icon: isDesktop ? null : Icon(Icons.near_me),
+              child: _tabContent('Nearest', Icons.near_me),
             ),
           ],
         ),
@@ -78,9 +82,9 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     return isDesktop ? Row (
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(text),
-        const SizedBox(width: 8.0,),
         Icon(iconData),
+        const SizedBox(width: 8.0,),
+        Text(text),
       ],
     ) : null;
   }
