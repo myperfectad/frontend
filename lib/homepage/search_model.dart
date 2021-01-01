@@ -80,8 +80,8 @@ extension CategoryExtension on Category {
 class SearchModel extends ChangeNotifier {
   bool _showMale = true;
   bool _showFemale = true;
-  int _ageMin = 18;
-  int _ageMax = 60;
+  int _ageMin = 0;
+  int _ageMax = 100;
   double _range = 80000; // in meters
   LatLng _location = kLondonCoords;
   final Set<Category> _categories = {};

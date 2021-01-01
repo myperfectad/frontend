@@ -24,10 +24,10 @@ class ListDrawer extends StatelessWidget {
               const Divider(),
               // const SizedBox(height: 16.0),
               ArrowDownTo(text: 'Choose yo\' self', child: GenderCheckBoxes()),
-              // const SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               Text('Age', style: Theme.of(context).textTheme.headline4),
               AgeSlider(),
-              // const SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               Text('Location', style: Theme.of(context).textTheme.headline4),
               MiniMap(),
               // const SizedBox(height: 16.0),
@@ -171,24 +171,32 @@ class _AgeSliderState extends StateWithProvider<AgeSlider, SearchModel> {
 
   @override
   Widget build(BuildContext context) {
-    return RangeSlider(
-      values: _currentRangeValues,
-      min: 0,
-      max: 100,
-      divisions: 100,
-      labels: RangeLabels(
-        '${_currentRangeValues.start.round().toString()} years old',
-        '${_currentRangeValues.end.round().toString()} years old',
-      ),
-      onChanged: (RangeValues values) {
-        setState(() {
-          _currentRangeValues = values;
-        });
-      },
-      onChangeEnd: (RangeValues values) {
-        provider.ageMin = values.start.round();
-        provider.ageMax = values.end.round();
-      },
+    return Column(
+      children: [
+        RangeSlider(
+          values: _currentRangeValues,
+          min: 0,
+          max: 100,
+          divisions: 100,
+          onChanged: (RangeValues values) {
+            setState(() {
+              _currentRangeValues = values;
+            });
+          },
+          onChangeEnd: (RangeValues values) {
+            provider.ageMin = values.start.round();
+            provider.ageMax = values.end.round();
+          },
+        ),
+        Row(
+          children: [
+            const SizedBox(width: 8.0,),
+            Text('${_currentRangeValues.start.round().toString()} yrs'),
+            Spacer(),
+            Text('${_currentRangeValues.end.round().toString()} yrs'),
+          ],
+        ),
+      ],
     );
   }
 }
