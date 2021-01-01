@@ -104,6 +104,9 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
           _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
         });
       },
+      onChangeEnd: (double value) {
+        provider.range = value * 1000;
+      },
     );
   }
 
