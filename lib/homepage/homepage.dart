@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -78,7 +79,7 @@ class ScrollContent extends StatelessWidget {
             }
 
             // By default, show a loading spinner.
-            return Center(child: CircularProgressIndicator());
+            return Center(child: SpinKitFadingFour(color: Theme.of(context).accentColor));
           },
         );
       });
@@ -91,7 +92,7 @@ class GridNode extends StatelessWidget {
   final String desc;
   final String link;
   final String imageUrl;
-  final String tags;
+  final List<String> tags;
 
   const GridNode({Key key, this.title, this.desc, this.link, this.imageUrl, this.tags}) : super(key: key);
 
@@ -99,7 +100,7 @@ class GridNode extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tooltip(
       message: '$link'
-          '${tags != null ? '\n$tags' : ''}',
+          '${tags != null ? '\n${_parseTags()}' : ''}',
       child: InkWell(
         onTap: () {
           launch(link);
@@ -113,5 +114,19 @@ class GridNode extends StatelessWidget {
             : Center(child: Text('Image not available')),
       ),
     );
+  }
+
+  String _parseTags() {
+    String s;
+    bool first = true;
+    for (var tag in tags) {
+      if (first) {
+        s = tag;
+        first = false;
+      } else {
+        s += ', $tag';
+      }
+    }
+    return s;
   }
 }

@@ -184,7 +184,7 @@ class Ad {
   final String link;
   final String imageUrl;
   final String createdAt;
-  final String tags;
+  final List<String> tags;
 
   Ad({this.id, this.title, this.desc, this.link, this.imageUrl, this.createdAt, this.tags});
 
