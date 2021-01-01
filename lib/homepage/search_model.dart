@@ -9,7 +9,7 @@ import 'homepage.dart';
 final LatLng kLondonCoords = LatLng(51.509865, -0.118092);
 
 enum Category {
-  learning, film, fun, gaming, shopping, random, utility, irl
+  learning, entertainment, fun, gaming, shopping, random, tool, irl
 }
 
 extension CategoryExtension on Category {
@@ -19,8 +19,8 @@ extension CategoryExtension on Category {
       case Category.learning:
         return 'Learning';
         break;
-      case Category.film:
-        return 'Film';
+      case Category.entertainment:
+        return 'Entertainment';
         break;
       case Category.fun:
         return 'Fun';
@@ -34,8 +34,8 @@ extension CategoryExtension on Category {
       case Category.random:
         return 'Random';
         break;
-      case Category.utility:
-        return 'Utility';
+      case Category.tool:
+        return 'Tool';
         break;
       case Category.irl:
         return 'IRL';
@@ -50,7 +50,7 @@ extension CategoryExtension on Category {
       case Category.learning:
         return 'images/book.png';
         break;
-      case Category.film:
+      case Category.entertainment:
         return 'images/cinema.png';
         break;
       case Category.fun:
@@ -65,7 +65,7 @@ extension CategoryExtension on Category {
       case Category.random:
         return 'images/random.png';
         break;
-      case Category.utility:
+      case Category.tool:
         return 'images/toolbox.png';
         break;
       case Category.irl:

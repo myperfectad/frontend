@@ -211,7 +211,7 @@ class CategoriesPicker extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CategoryButton(Category.learning),
-            CategoryButton(Category.film),
+            CategoryButton(Category.entertainment),
             CategoryButton(Category.fun),
             CategoryButton(Category.gaming),
           ],
@@ -222,7 +222,7 @@ class CategoriesPicker extends StatelessWidget {
           children: [
             CategoryButton(Category.shopping),
             CategoryButton(Category.random),
-            CategoryButton(Category.utility),
+            CategoryButton(Category.tool),
             CategoryButton(Category.irl),
           ],
         ),
