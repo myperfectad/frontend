@@ -49,20 +49,26 @@ class ScrollContent extends StatelessWidget {
   ScrollContent(this.isDesktop, {Key key}) : super(key: key);
 
   final bool isDesktop;
+  final List<String> demos = List.generate(
+      40, (index) => 'images/demo/demo-${index + 1}.${index == 11
+      ? 'png'
+      : 'jpg'}');
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return GridView.count(
-        // adaptive count. Count is always 2 on mobile
-        crossAxisCount: isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
-        children: List.generate(40, (index) {
+      return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          // adaptive count. Count is always 2 on mobile
+          crossAxisCount: isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
+        ),
+        itemCount: 40,
+        itemBuilder: (context, index) {
           return GridNode(
             link: 'https:google.co.uk',
-            imageUrl:
-                'images/demo/demo-${index + 1}.${index == 11 ? 'png' : 'jpg'}',
+            imageUrl: demos[index],
           );
-        }).toList(),
+        },
       );
     });
   }
