@@ -14,9 +14,10 @@ class ListDrawer extends StatelessWidget {
     final drawer = Drawer(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: ListView(
             children: [
+              const SizedBox(height: 16.0),
               Image.asset(
                 'images/logo2.png',
                 height: 96.0,
@@ -40,6 +41,7 @@ class ListDrawer extends StatelessWidget {
               const Divider(),
               const SizedBox(height: 16.0),
               Footer(),
+              const SizedBox(height: 16.0),
             ],
           ),
         ),
