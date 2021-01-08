@@ -107,8 +107,9 @@ class GridNode extends StatelessWidget {
       message: '$link'
           '${tags != null ? '\n${_parseTags()}' : ''}',
       child: InkWell(
-        onTap: () {
-          launch(link);
+        onTap: () async {
+          if (await canLaunch(link) && Uri.parse(link).isAbsolute)
+            launch(link);
         },
         child: imageUrl != null
             ? FadeInImage.memoryNetwork(
