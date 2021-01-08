@@ -10,7 +10,6 @@ import 'list_drawer.dart';
 import 'search_model.dart';
 
 const double MIN_AD_WIDTH = 256;
-const String ENDPOINT = 'https://fathomless-spire-13212.herokuapp.com/ads';
 
 class HomePage extends StatelessWidget {
 

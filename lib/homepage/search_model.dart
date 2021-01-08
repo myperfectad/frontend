@@ -75,9 +75,26 @@ class SearchModel extends ChangeNotifier {
   
   Future<List<Ad>> get futureAds => _futureAds;
 
-  // TODO send filters
+  Uri _composeQuery() {
+    Uri u = Uri.https(
+      'fathomless-spire-13212.herokuapp.com',
+      '/ads',
+      {
+        'male': _showMale.toString(),
+        'female': _showFemale.toString(),
+        'minAge': _ageMin.toString(),
+        'maxAge': _ageMax.toString(),
+        // TODO
+        // for (var c in _categories)
+        //   'categories' : c.name.toLowerCase(),
+      },
+    );
+    debugPrint(u.toString());
+    return u;
+  }
+
   Future<List<Ad>> _fetchAds() async {
-    final response = await http.get(ENDPOINT);
+    final response = await http.get(_composeQuery());
     // debugPrint(response.statusCode.toString());
 
     if (response.statusCode == 200) {
