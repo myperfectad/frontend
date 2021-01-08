@@ -113,16 +113,11 @@ class SearchModel extends ChangeNotifier {
   }
 
   int get ageMax => _ageMax;
-
-  set ageMax(int value) {
-    _ageMax = value;
-    _reFetch();
-  }
-
   int get ageMin => _ageMin;
 
-  set ageMin(int value) {
-    _ageMin = value;
+  void setAgeRange(int min, int max) {
+    _ageMin = min;
+    _ageMax = max;
     _reFetch();
   }
   

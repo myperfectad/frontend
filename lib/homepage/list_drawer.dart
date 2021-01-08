@@ -188,8 +188,7 @@ class _AgeSliderState extends StateWithProvider<AgeSlider, SearchModel> {
             });
           },
           onChangeEnd: (RangeValues values) {
-            provider.ageMin = values.start.round();
-            provider.ageMax = values.end.round();
+            provider.setAgeRange(values.start.round(), values.end.round());
           },
         ),
         Row(
