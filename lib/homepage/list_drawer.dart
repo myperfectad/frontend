@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../image_shadow.dart';
 import '../state_with_provider.dart';
 import 'minimap.dart';
+import 'search_params.dart';
 import 'tags.dart';
 
 class ListDrawer extends StatelessWidget {
