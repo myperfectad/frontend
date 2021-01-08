@@ -61,11 +61,16 @@ class ScrollContent extends StatelessWidget {
             // debugPrint('Loading future data...');
 
             if (snapshot.hasData) {
-              // TODO should probably change to builder
-              return GridView.count(
-                // adaptive count. Count is always 2 on mobile
-                crossAxisCount: isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
-                children: snapshot.data.map<GridNode>((Ad ad) {
+              List<Ad> ads = snapshot.data;
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  // adaptive count. Count is always 2 on mobile
+                  crossAxisCount: isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
+                ),
+                itemCount: ads.length,
+                itemBuilder: (context, index) {
+                  // TODO add EOF?
+                  Ad ad = ads[index];
                   return GridNode(
                     title: ad.title,
                     desc: ad.desc,
@@ -73,7 +78,7 @@ class ScrollContent extends StatelessWidget {
                     imageUrl: ad.imageUrl,
                     tags: ad.tags,
                   );
-                }).toList(),
+                },
               );
             } else if (snapshot.hasError) {
               return Center(child: Text(snapshot.error.toString()));
