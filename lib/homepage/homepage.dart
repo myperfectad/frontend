@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -75,6 +76,7 @@ class ScrollContent extends StatelessWidget {
                     desc: ad.desc,
                     link: ad.link,
                     imageUrl: ad.imageUrl,
+                    category: ad.category,
                     tags: ad.tags,
                   );
                 },
@@ -97,9 +99,10 @@ class GridNode extends StatelessWidget {
   final String desc;
   final String link;
   final String imageUrl;
+  final String category;
   final List<String> tags;
 
-  const GridNode({Key key, this.title, this.desc, this.link, this.imageUrl, this.tags}) : super(key: key);
+  const GridNode({Key key, this.title, this.desc, this.link, this.imageUrl, this.category, this.tags}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +110,12 @@ class GridNode extends StatelessWidget {
       message: '$link'
           '${tags != null ? '\n${_parseTags()}' : ''}',
       child: InkWell(
-        onTap: () async {
-          if (await canLaunch(link) && Uri.parse(link).isAbsolute)
-            launch(link);
+        onTap: _launchLink,
+        onDoubleTap: () {
+          _showDetails(context);
+        },
+        onLongPress: () {
+          _showDetails(context);
         },
         child: imageUrl != null
             ? FadeInImage.memoryNetwork(
@@ -123,7 +129,13 @@ class GridNode extends StatelessWidget {
     );
   }
 
+  void _launchLink() async {
+    if (await canLaunch(link) && Uri.parse(link).isAbsolute)
+      launch(link);
+  }
+
   String _parseTags() {
+    if (tags == null) return 'none';
     String s;
     bool first = true;
     for (var tag in tags) {
@@ -135,5 +147,39 @@ class GridNode extends StatelessWidget {
       }
     }
     return s;
+  }
+
+  void _showDetails(BuildContext context) {
+    TextStyle bodyStyle = Theme.of(context).textTheme.bodyText1;
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Some title',
+                style: Theme.of(context).textTheme.headline4),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Some description here.', style: bodyStyle),
+                const SizedBox(height: 16.0),
+                Text('Category: $category', style: bodyStyle),
+                Text('Tags: ${_parseTags()}', style: bodyStyle),
+                const SizedBox(height: 16.0),
+                RichText(
+                  text: TextSpan(
+                    text: '$link',
+                    style: bodyStyle.copyWith(
+                      color: Theme.of(context).accentColor,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()..onTap = _launchLink,
+                  ),
+                )
+              ],
+            ),
+          );
+        });
   }
 }

@@ -69,4 +69,16 @@ extension CategoryExtension on Category {
         return null;
     }
   }
+
+  @deprecated // probably needlessly expensive
+  static Category fromString(String s) {
+    s = s.toLowerCase();
+
+    for (Category c in Category.values) {
+      if (c.name.toLowerCase() == s)
+        return c;
+    }
+
+    return null;
+  }
 }
