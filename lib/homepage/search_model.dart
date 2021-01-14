@@ -76,17 +76,18 @@ class SearchModel extends ChangeNotifier {
   Future<List<Ad>> get futureAds => _futureAds;
 
   Uri _composeQuery() {
-    Uri u = Uri.https(
-      'fathomless-spire-13212.herokuapp.com',
-      '/ads',
-      {
+    Uri u = Uri(
+      scheme: 'https',
+      host: 'fathomless-spire-13212.herokuapp.com',
+      path: '/ads',
+      queryParameters: {
         'male': _showMale.toString(),
         'female': _showFemale.toString(),
         'minAge': _ageMin.toString(),
         'maxAge': _ageMax.toString(),
-        // TODO
-        // for (var c in _categories)
-        //   'categories' : c.name.toLowerCase(),
+        'categories': [
+          for (var c in _categories) c.name.toLowerCase(),
+        ],
       },
     );
     debugPrint(u.toString());
