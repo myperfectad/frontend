@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../image_shadow.dart';
 import '../state_with_provider.dart';
 import 'minimap.dart';
+import 'search_params.dart';
 import 'tags.dart';
 
 class ListDrawer extends StatelessWidget {
@@ -14,9 +15,10 @@ class ListDrawer extends StatelessWidget {
     final drawer = Drawer(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: ListView(
             children: [
+              const SizedBox(height: 16.0),
               Image.asset(
                 'images/logo2.png',
                 height: 96.0,
@@ -25,14 +27,12 @@ class ListDrawer extends StatelessWidget {
               const Divider(),
               // const SizedBox(height: 16.0),
               ArrowDownTo(text: 'Choose yo\' self', child: GenderCheckBoxes()),
-              const SizedBox(height: 16.0),
-              Text('Age', style: Theme.of(context).textTheme.headline4),
               AgeSlider(),
               const SizedBox(height: 16.0),
               Text('Location', style: Theme.of(context).textTheme.headline4),
               MiniMap(),
               // const SizedBox(height: 16.0),
-              Text('What type?', style: Theme.of(context).textTheme.headline4),
+              Text('What do you feel like?', style: Theme.of(context).textTheme.headline4),
               CategoriesPicker(),
               const SizedBox(height: 16.0),
               Text('What do you love?', style: Theme.of(context).textTheme.headline4),
@@ -40,6 +40,7 @@ class ListDrawer extends StatelessWidget {
               const Divider(),
               const SizedBox(height: 16.0),
               Footer(),
+              const SizedBox(height: 16.0),
             ],
           ),
         ),
@@ -186,8 +187,7 @@ class _AgeSliderState extends StateWithProvider<AgeSlider, SearchModel> {
             });
           },
           onChangeEnd: (RangeValues values) {
-            provider.ageMin = values.start.round();
-            provider.ageMax = values.end.round();
+            provider.setAgeRange(values.start.round(), values.end.round());
           },
         ),
         Row(
@@ -269,6 +269,7 @@ class _CategoryButtonState extends StateWithProvider<CategoryButton, SearchModel
           } else {
             provider.removeCategory(widget.category);
           }
+          FocusScope.of(context).unfocus();
         },
       ),
     );

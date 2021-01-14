@@ -9,7 +9,6 @@ import 'list_drawer.dart';
 import 'search_model.dart';
 
 const double MIN_AD_WIDTH = 256;
-const String ENDPOINT = 'https://fathomless-spire-13212.herokuapp.com/ads';
 
 class HomePage extends StatelessWidget {
 
@@ -89,8 +88,9 @@ class GridNode extends StatelessWidget {
       message: '$link'
           '${tags != null ? '\n${_parseTags()}' : ''}',
       child: InkWell(
-        onTap: () {
-          launch(link);
+        onTap: () async {
+          if (await canLaunch(link) && Uri.parse(link).isAbsolute)
+            launch(link);
         },
         child: imageUrl != null
             ? Image.asset(

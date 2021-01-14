@@ -5,84 +5,14 @@ import 'package:latlong/latlong.dart';
 import 'package:http/http.dart' as http;
 
 import 'homepage.dart';
-
-final LatLng kLondonCoords = LatLng(51.509865, -0.118092);
-
-enum Category {
-  learning, entertainment, fun, gaming, shopping, random, tool, irl
-}
-
-extension CategoryExtension on Category {
-  String get name {
-    switch (this) {
-      
-      case Category.learning:
-        return 'Learning';
-        break;
-      case Category.entertainment:
-        return 'Entertainment';
-        break;
-      case Category.fun:
-        return 'Fun';
-        break;
-      case Category.gaming:
-        return 'Gaming';
-        break;
-      case Category.shopping:
-        return 'Shopping';
-        break;
-      case Category.random:
-        return 'Random';
-        break;
-      case Category.tool:
-        return 'Tool';
-        break;
-      case Category.irl:
-        return 'IRL';
-        break;
-      default:
-        return null;
-    }
-  }
-  
-  String get iconPath {
-    switch (this) {
-      case Category.learning:
-        return 'images/book.png';
-        break;
-      case Category.entertainment:
-        return 'images/cinema.png';
-        break;
-      case Category.fun:
-        return 'images/confetti.png';
-        break;
-      case Category.gaming:
-        return 'images/game-controller.png';
-        break;
-      case Category.shopping:
-        return 'images/online-shopping.png';
-        break;
-      case Category.random:
-        return 'images/random.png';
-        break;
-      case Category.tool:
-        return 'images/toolbox.png';
-        break;
-      case Category.irl:
-        return 'images/town.png';
-        break;
-      default:
-        return null;
-    }
-  }
-}
+import 'search_params.dart';
 
 class SearchModel extends ChangeNotifier {
   bool _showMale = true;
   bool _showFemale = true;
   int _ageMin = 0;
   int _ageMax = 100;
-  double _range = 80000; // in meters
+  double _range = 300000; // in meters
   LatLng _location = kLondonCoords;
   final Set<Category> _categories = {};
   Future<List<Ad>> _futureAds;
@@ -113,16 +43,11 @@ class SearchModel extends ChangeNotifier {
   }
 
   int get ageMax => _ageMax;
-
-  set ageMax(int value) {
-    _ageMax = value;
-    _reFetch();
-  }
-
   int get ageMin => _ageMin;
 
-  set ageMin(int value) {
-    _ageMin = value;
+  void setAgeRange(int min, int max) {
+    _ageMin = min;
+    _ageMax = max;
     _reFetch();
   }
   
@@ -150,9 +75,26 @@ class SearchModel extends ChangeNotifier {
   
   Future<List<Ad>> get futureAds => _futureAds;
 
-  // TODO send filters
+  Uri _composeQuery() {
+    Uri u = Uri.https(
+      'fathomless-spire-13212.herokuapp.com',
+      '/ads',
+      {
+        'male': _showMale.toString(),
+        'female': _showFemale.toString(),
+        'minAge': _ageMin.toString(),
+        'maxAge': _ageMax.toString(),
+        // TODO
+        // for (var c in _categories)
+        //   'categories' : c.name.toLowerCase(),
+      },
+    );
+    debugPrint(u.toString());
+    return u;
+  }
+
   Future<List<Ad>> _fetchAds() async {
-    final response = await http.get(ENDPOINT);
+    final response = await http.get(_composeQuery());
     // debugPrint(response.statusCode.toString());
 
     if (response.statusCode == 200) {

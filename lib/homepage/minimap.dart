@@ -57,7 +57,12 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
           },
           child: _map(),
         ),
-        _rangeSlider(),
+        Row(
+          children: [
+            _rangeSlider(),
+            Text(_currentRangeKm >= 1000 ? 'Worldwide' : '${_currentRangeKm.toString()} km'),
+          ],
+        ),
       ],
     );
   }
@@ -92,17 +97,19 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
   Widget _rangeSlider() {
     return Slider(
       // clamp just in case
-      value: _currentRangeKm.clamp(1, 100),
-      min: 1,
-      max: 100,
+      value: _currentRangeKm.clamp(10, 1000),
+      min: 10,
+      max: 1000,
       divisions: 99,
-      label: '${_currentRangeKm.toString()} km',
       onChanged: (double value) {
         setState(() {
           _currentRangeKm = value.round();
           _currentRange = value * 1000;
           _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
         });
+      },
+      onChangeEnd: (double value) {
+        provider.range = value * 1000;
       },
     );
   }

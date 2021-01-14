@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -8,7 +7,7 @@ class Tags extends StatefulWidget {
 }
 
 class _TagsState extends State<Tags> {
-  final List<String> _tags = [
+  static const List<String> kTags = [
     'Food',
     'Tech',
     'Sport',
@@ -21,35 +20,58 @@ class _TagsState extends State<Tags> {
     'Drinking',
   ];
 
-  String _selected = '';
+  Map<String, bool> _tags;
+
+  @override
+  void initState() {
+    super.initState();
+    // TODO change to network
+    _tags = Map.fromIterable(
+      kTags,
+      key: (tag) => tag,
+      value: (tag) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     // https://stackoverflow.com/questions/56211844/flutter-web-mouse-hover-change-cursor-to-pointer
-    return Container(
-      child: RichText(
-        text: TextSpan(
-          children: _tags.map<TextSpan>(
-            (tag) {
-              return TextSpan(
-                text: '$tag ',
-                style: Theme.of(context).textTheme.bodyText1.copyWith(
-                      fontSize: 18.0,
-                      color: _selected == tag
-                          ? Theme.of(context).accentColor
-                          : Theme.of(context).backgroundColor,
-                    ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    setState(() {
-                      _selected = tag;
-                    });
-                  },
-              );
-            },
-          ).toList(),
+    // https://stackoverflow.com/questions/51652897/how-to-hide-soft-input-keyboard-on-flutter-after-clicking-outside-textfield-anyw
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 8.0),
+        TextField(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Enter search term',
+          ),
         ),
-      ),
+        const SizedBox(height: 8.0),
+        _suggestions(context),
+      ],
+    );
+  }
+
+  Widget _suggestions(BuildContext context) {
+    return Wrap(
+      spacing: 4.0,
+      runSpacing: 4.0,
+      children: _tags.entries.map<Widget>(
+        (entry) {
+          return ChoiceChip(
+            label: Text(entry.key),
+            selected: entry.value,
+            onSelected: (bool selected) {
+              setState(() {
+                _tags[entry.key] = selected;
+              });
+              FocusScope.of(context).unfocus();
+            },
+            selectedColor: Theme.of(context).accentColor,
+          );
+        },
+      ).toList(),
     );
   }
 }

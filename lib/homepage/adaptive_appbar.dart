@@ -65,15 +65,15 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ],
         ),
-        actions: [
-          // advertiser console not available on mobile
-          if (isDesktop)
-            IconButton(
-              icon: const Icon(Icons.login),
-              tooltip: 'Advertiser Login',
-              onPressed: () {},
-            ),
-        ],
+        // actions: [
+        //   // advertiser console not available on mobile
+        //   if (isDesktop)
+        //     IconButton(
+        //       icon: const Icon(Icons.login),
+        //       tooltip: 'Advertiser Login',
+        //       onPressed: () {},
+        //     ),
+        // ],
       ),
     );
   }
