@@ -269,6 +269,7 @@ class _CategoryButtonState extends StateWithProvider<CategoryButton, SearchModel
           } else {
             provider.removeCategory(widget.category);
           }
+          FocusScope.of(context).unfocus();
         },
       ),
     );

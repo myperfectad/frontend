@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -37,6 +36,7 @@ class _TagsState extends State<Tags> {
   @override
   Widget build(BuildContext context) {
     // https://stackoverflow.com/questions/56211844/flutter-web-mouse-hover-change-cursor-to-pointer
+    // https://stackoverflow.com/questions/51652897/how-to-hide-soft-input-keyboard-on-flutter-after-clicking-outside-textfield-anyw
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -48,12 +48,12 @@ class _TagsState extends State<Tags> {
           ),
         ),
         const SizedBox(height: 8.0),
-        _suggestions(),
+        _suggestions(context),
       ],
     );
   }
 
-  Widget _suggestions() {
+  Widget _suggestions(BuildContext context) {
     return Wrap(
       spacing: 4.0,
       runSpacing: 4.0,
@@ -66,6 +66,7 @@ class _TagsState extends State<Tags> {
               setState(() {
                 _tags[entry.key] = selected;
               });
+              FocusScope.of(context).unfocus();
             },
             selectedColor: Theme.of(context).accentColor,
           );
