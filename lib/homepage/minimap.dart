@@ -8,12 +8,13 @@ import 'search_model.dart';
 import 'map_dialog.dart';
 
 class MiniMap extends StatefulWidget {
+  static const double kZoom = 5.0;
+
   @override
   _MiniMapState createState() => _MiniMapState();
 }
 
 class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
-  static final double _kZoom = 5.0;
 
   final MapController _mapController = MapController();
 
@@ -52,7 +53,7 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
               _currentPosMarker = _buildMarker(_currentPos);
               _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
             });
-            _mapController.move(_currentPos, _kZoom);
+            _mapController.move(_currentPos, MiniMap.kZoom);
             provider.location = _currentPos;
           },
           child: _map(),
@@ -74,7 +75,7 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
         mapController: _mapController,
         options: MapOptions(
           center: _currentPos,
-          zoom: _kZoom,
+          zoom: MiniMap.kZoom,
           interactive: false,
         ),
         layers: [

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,6 +9,7 @@ import 'package:transparent_image/transparent_image.dart';
 import '../layout.dart';
 import 'adaptive_appbar.dart';
 import 'list_drawer.dart';
+import 'minimap.dart';
 import 'search_model.dart';
 
 const double MIN_AD_WIDTH = 256;
@@ -158,28 +160,71 @@ class GridNode extends StatelessWidget {
           return AlertDialog(
             title: Text('Some title',
                 style: Theme.of(context).textTheme.headline4),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Some description here.', style: bodyStyle),
-                const SizedBox(height: 16.0),
-                Text('Category: $category', style: bodyStyle),
-                Text('Tags: ${_parseTags()}', style: bodyStyle),
-                const SizedBox(height: 16.0),
-                RichText(
-                  text: TextSpan(
-                    text: '$link',
-                    style: bodyStyle.copyWith(
-                      color: Theme.of(context).accentColor,
-                      decoration: TextDecoration.underline,
+            // As noted in the AlertDialog documentation,
+            // it's important to use a SingleChildScrollView if there's
+            // any risk that the content will not fit.
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Some description here.', style: bodyStyle),
+                  const SizedBox(height: 16.0),
+                  Text('Category: $category', style: bodyStyle),
+                  Text('Tags: ${_parseTags()}', style: bodyStyle),
+                  const SizedBox(height: 16.0),
+                  RichText(
+                    text: TextSpan(
+                      text: '$link',
+                      style: bodyStyle.copyWith(
+                        color: Theme.of(context).accentColor,
+                        decoration: TextDecoration.underline,
+                      ),
+                      recognizer: TapGestureRecognizer()..onTap = _launchLink,
                     ),
-                    recognizer: TapGestureRecognizer()..onTap = _launchLink,
                   ),
-                )
-              ],
+                  const SizedBox(height: 16.0),
+                  _GridMap(),
+                ],
+              ),
             ),
           );
-        });
+        },
+    );
+  }
+}
+
+class _GridMap extends StatelessWidget {
+  // TODO on click launches to google maps?
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 185.4,
+      // width MUST be specified here
+      width: 300.0,
+      child: FlutterMap(
+        options: MapOptions(
+          // center: TODO add location,
+          zoom: MiniMap.kZoom,
+          interactive: false,
+        ),
+        layers: [
+          TileLayerOptions(
+              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              subdomains: ['a', 'b', 'c'],
+          ),
+          MarkerLayerOptions(
+            markers: [
+              Marker(
+                width: 32.0,
+                height: 32.0,
+                builder: (context) => FlutterLogo(),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

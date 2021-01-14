@@ -285,7 +285,7 @@ class Footer extends StatelessWidget {
         text: TextSpan(
           children: [
             TextSpan(
-              text: '© 2020 My Perfect Ad. Icons by ',
+              text: '© 2021 My Perfect Ad. Icons by ',
               style: Theme.of(context).textTheme.bodyText2,
             ),
             TextSpan(
