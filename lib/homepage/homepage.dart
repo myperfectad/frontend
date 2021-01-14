@@ -49,9 +49,7 @@ class ScrollContent extends StatelessWidget {
 
   final bool isDesktop;
   final List<String> demos = List.generate(
-      40, (index) => 'images/demo/demo-${index + 1}.${index == 11
-      ? 'png'
-      : 'jpg'}');
+      31, (index) => 'images/demo/demo-${index + 1}.jpg');
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +59,12 @@ class ScrollContent extends StatelessWidget {
           // adaptive count. Count is always 2 on mobile
           crossAxisCount: isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
         ),
-        itemCount: 40,
+        itemCount: 31,
         itemBuilder: (context, index) {
           return GridNode(
             link: 'https://google.co.uk',
             imageUrl: demos[index],
+            tags: ['gaming', 'food', 'tech'],
           );
         },
       );

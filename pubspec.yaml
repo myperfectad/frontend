@@ -82,7 +82,7 @@ flutter:
     - images/demo/demo-9.jpg
     - images/demo/demo-10.jpg
     - images/demo/demo-11.jpg
-    - images/demo/demo-12.png
+    - images/demo/demo-12.jpg
     - images/demo/demo-13.jpg
     - images/demo/demo-14.jpg
     - images/demo/demo-15.jpg
@@ -102,15 +102,6 @@ flutter:
     - images/demo/demo-29.jpg
     - images/demo/demo-30.jpg
     - images/demo/demo-31.jpg
-    - images/demo/demo-32.jpg
-    - images/demo/demo-33.jpg
-    - images/demo/demo-34.jpg
-    - images/demo/demo-35.jpg
-    - images/demo/demo-36.jpg
-    - images/demo/demo-37.jpg
-    - images/demo/demo-38.jpg
-    - images/demo/demo-39.jpg
-    - images/demo/demo-40.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -18,7 +18,7 @@ class SearchModel extends ChangeNotifier {
   Future<List<Ad>> _futureAds;
 
   SearchModel() {
-    _futureAds = _fetchAds();
+    // _futureAds = _fetchAds();
   }
 
   bool get showMale => _showMale;
