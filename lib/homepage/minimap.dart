@@ -60,7 +60,7 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
         Row(
           children: [
             _rangeSlider(),
-            Text(_currentRangeKm >= 100 ? 'Worldwide' : '${_currentRangeKm.toString()} km'),
+            Text(_currentRangeKm >= 1000 ? 'Worldwide' : '${_currentRangeKm.toString()} km'),
           ],
         ),
       ],
@@ -97,9 +97,9 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
   Widget _rangeSlider() {
     return Slider(
       // clamp just in case
-      value: _currentRangeKm.clamp(1, 100),
-      min: 1,
-      max: 100,
+      value: _currentRangeKm.clamp(10, 1000),
+      min: 10,
+      max: 1000,
       divisions: 99,
       onChanged: (double value) {
         setState(() {
@@ -129,7 +129,7 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
 
   CircleMarker _buildCircle(LatLng pos, double radius) {
     return CircleMarker(
-      radius: _currentRangeKm >= 100 ? 1000000.0 : radius,
+      radius: radius,
       point: pos,
       useRadiusInMeter: true,
       color: Color.lerp(Colors.cyan, Colors.transparent, 0.5),

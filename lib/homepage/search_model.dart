@@ -12,7 +12,7 @@ class SearchModel extends ChangeNotifier {
   bool _showFemale = true;
   int _ageMin = 0;
   int _ageMax = 100;
-  double _range = 80000; // in meters
+  double _range = 300000; // in meters
   LatLng _location = kLondonCoords;
   final Set<Category> _categories = {};
   Future<List<Ad>> _futureAds;
