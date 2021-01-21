@@ -11,7 +11,7 @@ class SearchModel extends ChangeNotifier {
   bool _showFemale = true;
   int _ageMin = 0;
   int _ageMax = 100;
-  double _range = 300000; // in meters
+  int _range = 300; // in km
   LatLng _location = kLondonCoords;
   final Set<Category> _categories = {};
   SortBy _sortBy = SortBy.trending;
@@ -66,10 +66,10 @@ class SearchModel extends ChangeNotifier {
     return _categories.contains(category);
   }
 
-  /// Gets the current range in meters.
-  double get range => _range;
+  /// Gets the current range in kilometers.
+  int get range => _range;
 
-  set range(double value) {
+  set range(int value) {
     _range = value;
     _reFetch();
   }
@@ -85,7 +85,7 @@ class SearchModel extends ChangeNotifier {
     Uri u = Uri(
       scheme: 'https',
       host: 'fathomless-spire-13212.herokuapp.com',
-      path: '/ads',
+      path: '/items' + _sortBy.getPathFromSort,
       queryParameters: {
         'male': _showMale.toString(),
         'female': _showFemale.toString(),
@@ -94,6 +94,9 @@ class SearchModel extends ChangeNotifier {
         'categories': [
           for (var c in _categories) c.name.toLowerCase(),
         ],
+        'longitude': _location.longitude.toString(),
+        'latitude': _location.latitude.toString(),
+        'radius': _range >= 1000 ? '-1' : _range.toString(),
       },
     );
     debugPrint(u.toString());

@@ -22,17 +22,15 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
   CircleMarker _currentRangeCircle;
 
   LatLng _currentPos;
-  double _currentRange;
   int _currentRangeKm;
 
   @override
   void initState() {
     super.initState();
     _currentPos = provider.location;
-    _currentRange = provider.range;
-    _currentRangeKm = (_currentRange / 1000).round();
+    _currentRangeKm = provider.range;
     _currentPosMarker = _buildMarker(provider.location);
-    _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
+    _currentRangeCircle = _buildCircle(_currentPos, _currentRangeKm);
   }
 
   @override
@@ -51,7 +49,7 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
                 });
             setState(() {
               _currentPosMarker = _buildMarker(_currentPos);
-              _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
+              _currentRangeCircle = _buildCircle(_currentPos, _currentRangeKm);
             });
             _mapController.move(_currentPos, MiniMap.kZoom);
             provider.location = _currentPos;
@@ -105,12 +103,11 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
       onChanged: (double value) {
         setState(() {
           _currentRangeKm = value.round();
-          _currentRange = value * 1000;
-          _currentRangeCircle = _buildCircle(_currentPos, _currentRange);
+          _currentRangeCircle = _buildCircle(_currentPos, _currentRangeKm);
         });
       },
       onChangeEnd: (double value) {
-        provider.range = value * 1000;
+        provider.range = value.round();
       },
     );
   }
@@ -128,9 +125,9 @@ class _MiniMapState extends StateWithProvider<MiniMap, SearchModel> {
     );
   }
 
-  CircleMarker _buildCircle(LatLng pos, double radius) {
+  CircleMarker _buildCircle(LatLng pos, int radiusKm) {
     return CircleMarker(
-      radius: radius,
+      radius: (1000 * radiusKm).toDouble(),
       point: pos,
       useRadiusInMeter: true,
       color: Color.lerp(Colors.cyan, Colors.transparent, 0.5),
