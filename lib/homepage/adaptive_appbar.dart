@@ -22,8 +22,11 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    SearchModel sm = Provider.of<SearchModel>(context, listen: false);
+
     return DefaultTabController(
       length: 5,
+      initialIndex: SortBy.values.indexOf(sm.sortBy),
       child: AppBar(
         automaticallyImplyLeading: !isDesktop,
         centerTitle: isDesktop,
@@ -71,7 +74,6 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ],
           onTap: (index) {
-            SearchModel sm = Provider.of<SearchModel>(context, listen: false);
             // for this to work, make sure the order of enums is the order the tabs appear in!
             sm.sortBy = SortBy.values[index];
           },

@@ -74,6 +74,8 @@ class SearchModel extends ChangeNotifier {
     _reFetch();
   }
 
+  SortBy get sortBy => _sortBy;
+
   set sortBy(SortBy s) {
     _sortBy = s;
     _reFetch();
