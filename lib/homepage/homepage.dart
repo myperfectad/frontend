@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:latlong/latlong.dart';
 
 import '../layout.dart';
 import 'adaptive_appbar.dart';
@@ -73,14 +74,7 @@ class ScrollContent extends StatelessWidget {
                 itemBuilder: (context, index) {
                   // TODO add EOF?
                   Ad ad = ads[index];
-                  return GridNode(
-                    title: ad.title,
-                    desc: ad.desc,
-                    link: ad.link,
-                    imageUrl: ad.imageUrl,
-                    category: ad.category,
-                    tags: ad.tags,
-                  );
+                  return GridNode(ad);
                 },
               );
             } else if (snapshot.hasError) {
@@ -97,20 +91,16 @@ class ScrollContent extends StatelessWidget {
 }
 
 class GridNode extends StatelessWidget {
-  final String title;
-  final String desc;
-  final String link;
-  final String imageUrl;
-  final String category;
-  final List<String> tags;
 
-  const GridNode({Key key, this.title, this.desc, this.link, this.imageUrl, this.category, this.tags}) : super(key: key);
+  final Ad ad;
+
+  const GridNode(this.ad, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: '$link'
-          '${tags != null ? '\n${_parseTags()}' : ''}',
+      message: '${ad.link}'
+          '${ad.tags != null ? '\n${_parseTags()}' : ''}',
       child: InkWell(
         onTap: _launchLink,
         onDoubleTap: () {
@@ -119,9 +109,9 @@ class GridNode extends StatelessWidget {
         onLongPress: () {
           _showDetails(context);
         },
-        child: imageUrl != null
+        child: ad.imageUrl != null
             ? FadeInImage.memoryNetwork(
-          image: imageUrl,
+          image: ad.imageUrl,
           placeholder: kTransparentImage,
           // crops to square
           fit: BoxFit.cover,
@@ -132,15 +122,15 @@ class GridNode extends StatelessWidget {
   }
 
   void _launchLink() async {
-    if (await canLaunch(link) && Uri.parse(link).isAbsolute)
-      launch(link);
+    if (await canLaunch(ad.link) && Uri.parse(ad.link).isAbsolute)
+      launch(ad.link);
   }
 
   String _parseTags() {
-    if (tags == null) return 'none';
+    if (ad.tags == null) return 'none';
     String s;
     bool first = true;
-    for (var tag in tags) {
+    for (var tag in ad.tags) {
       if (first) {
         s = tag;
         first = false;
@@ -158,8 +148,7 @@ class GridNode extends StatelessWidget {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Some title',
-                style: Theme.of(context).textTheme.headline4),
+            title: Text(ad.title, style: Theme.of(context).textTheme.headline4),
             // As noted in the AlertDialog documentation,
             // it's important to use a SingleChildScrollView if there's
             // any risk that the content will not fit.
@@ -168,14 +157,14 @@ class GridNode extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Some description here.', style: bodyStyle),
+                  Text(ad.desc, style: bodyStyle),
                   const SizedBox(height: 16.0),
-                  Text('Category: $category', style: bodyStyle),
+                  Text('Category: ${ad.category}', style: bodyStyle),
                   Text('Tags: ${_parseTags()}', style: bodyStyle),
                   const SizedBox(height: 16.0),
                   RichText(
                     text: TextSpan(
-                      text: '$link',
+                      text: '${ad.link}',
                       style: bodyStyle.copyWith(
                         color: Theme.of(context).accentColor,
                         decoration: TextDecoration.underline,
@@ -184,7 +173,7 @@ class GridNode extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16.0),
-                  _GridMap(),
+                  _GridMap(ad.location),
                 ],
               ),
             ),
@@ -197,6 +186,10 @@ class GridNode extends StatelessWidget {
 class _GridMap extends StatelessWidget {
   // TODO on click launches to google maps?
 
+  final LatLng location;
+
+  const _GridMap(this.location, {Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -205,7 +198,7 @@ class _GridMap extends StatelessWidget {
       width: 300.0,
       child: FlutterMap(
         options: MapOptions(
-          // center: TODO add location,
+          center: location,
           zoom: MiniMap.kZoom,
           interactive: false,
         ),
@@ -217,9 +210,10 @@ class _GridMap extends StatelessWidget {
           MarkerLayerOptions(
             markers: [
               Marker(
+                point: location,
                 width: 32.0,
                 height: 32.0,
-                builder: (context) => FlutterLogo(),
+                builder: (context) => Image.asset('images/circular-target.png'),
               )
             ],
           ),

@@ -137,9 +137,10 @@ class Ad {
   final String imageUrl;
   final String createdAt;
   final String category;
+  final LatLng location;
   final List<String> tags;
 
-  Ad({this.id, this.title, this.desc, this.link, this.imageUrl, this.createdAt, this.category, this.tags});
+  Ad({this.id, this.title, this.desc, this.link, this.imageUrl, this.createdAt, this.category, this.location, this.tags});
 
   factory Ad.fromJson(Map<String, dynamic> json) {
     return Ad(
@@ -150,6 +151,7 @@ class Ad {
       imageUrl: json['photoUrl'],
       createdAt: json['createdAt'],
       category: json['category'],
+      location: LatLng(json['location']['lat'], json['location']['long']),
     );
   }
 }
