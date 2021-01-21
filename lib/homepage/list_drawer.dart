@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myperfectad/homepage/search_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -285,7 +286,45 @@ class Footer extends StatelessWidget {
         text: TextSpan(
           children: [
             TextSpan(
-              text: '© 2021 My Perfect Ad. Icons by ',
+              text: '© 2021 My Perfect Ad.',
+              style: TextStyle(
+                color: Theme.of(context).accentColor,
+                decoration: TextDecoration.underline,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                    showAboutDialog(
+                      context: context,
+                      applicationName: 'My Perfect Ad',
+                      applicationVersion: '1.0.0-alpha1',
+                      applicationIcon: Image.asset('images/logo2.png', height: 64.0, width: 64.0),
+                      children: [
+                        FlatButton.icon(
+                            onPressed: () {
+                              launch('https://instagram.com/myperfectadapp');
+                            },
+                            icon: FaIcon(FontAwesomeIcons.instagram),
+                            label: Text('myperfectadapp'),
+                        ),
+                        FlatButton.icon(
+                            onPressed: () {
+                              launch('https://twitter.com/myperfectad');
+                            },
+                            icon: FaIcon(FontAwesomeIcons.twitter),
+                            label: Text('myperfectad'),
+                        ),
+                        FlatButton.icon(
+                            onPressed: () {
+                              launch('mailto:rob@myperfectad.com');
+                            },
+                            icon: FaIcon(FontAwesomeIcons.envelope),
+                            label: Text('rob@myperfectad.com'),
+                        ),
+                      ],
+                    );
+                  }),
+            TextSpan(
+              text: ' Icons by ',
               style: Theme.of(context).textTheme.bodyText2,
             ),
             TextSpan(
