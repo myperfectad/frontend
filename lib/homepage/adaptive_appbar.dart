@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'search_model.dart';
+import 'search_params.dart';
 
 const appBarDesktopHeight = 105.0;
 const appBarMobileHeight = 100.0;
@@ -42,6 +46,8 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
         bottom: TabBar(
+          // a better way would be to generate these programmatically from the SortBy enum,
+          // but I'm too lazy to do that
           tabs: [
             Tab(
               icon: isDesktop ? null : Icon(Icons.whatshot),
@@ -64,6 +70,11 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: _tabContent('Nearest', Icons.near_me),
             ),
           ],
+          onTap: (index) {
+            SearchModel sm = Provider.of<SearchModel>(context, listen: false);
+            // for this to work, make sure the order of enums is the order the tabs appear in!
+            sm.sortBy = SortBy.values[index];
+          },
         ),
         // actions: [
         //   // advertiser console not available on mobile

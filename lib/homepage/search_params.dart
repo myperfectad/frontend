@@ -82,3 +82,24 @@ extension CategoryExtension on Category {
     return null;
   }
 }
+
+enum SortBy {
+  trending, latest, top, random, nearest
+}
+
+extension SortByExtension on SortBy {
+
+  // TODO
+  String get getPathFromSort {
+    switch (this) {
+      case SortBy.trending:
+      case SortBy.latest:
+        return '/latest';
+      case SortBy.top:
+      case SortBy.random:
+      case SortBy.nearest:
+      default:
+        return '/nearest';
+    }
+  }
+}

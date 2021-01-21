@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 import 'package:http/http.dart' as http;
 
-import 'homepage.dart';
 import 'search_params.dart';
 
 class SearchModel extends ChangeNotifier {
@@ -15,6 +14,8 @@ class SearchModel extends ChangeNotifier {
   double _range = 300000; // in meters
   LatLng _location = kLondonCoords;
   final Set<Category> _categories = {};
+  SortBy _sortBy = SortBy.trending;
+
   Future<List<Ad>> _futureAds;
 
   SearchModel() {
@@ -70,6 +71,11 @@ class SearchModel extends ChangeNotifier {
 
   set range(double value) {
     _range = value;
+    _reFetch();
+  }
+
+  set sortBy(SortBy s) {
+    _sortBy = s;
     _reFetch();
   }
   
