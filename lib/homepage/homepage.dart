@@ -211,9 +211,13 @@ class _GridMap extends StatelessWidget {
             markers: [
               Marker(
                 point: location,
-                width: 32.0,
-                height: 32.0,
-                builder: (context) => Image.asset('images/circular-target.png'),
+                builder: (context) => Transform.translate(
+                  offset: const Offset(0.0, -16.0), // translate by half height
+                  child: Image.asset(
+                    'images/location-pin.png',
+                    color: Colors.black87,
+                  ),
+                ),
               )
             ],
           ),

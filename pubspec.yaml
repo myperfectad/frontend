@@ -70,6 +70,7 @@ flutter:
     - images/arrow-left.png
     - images/girl.png
     - images/boy.png
+    - images/location-pin.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
