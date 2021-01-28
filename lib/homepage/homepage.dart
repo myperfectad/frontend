@@ -65,6 +65,13 @@ class ScrollContent extends StatelessWidget {
 
             if (snapshot.hasData) {
               List<Ad> ads = snapshot.data;
+
+              if (ads.isEmpty) {
+                return Center(
+                  child: Text('No ads found ☹️ try expanding filters?'),
+                );
+              }
+
               return GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   // adaptive count. Count is always 2 on mobile
@@ -77,6 +84,7 @@ class ScrollContent extends StatelessWidget {
                   return GridNode(ad);
                 },
               );
+
             } else if (snapshot.hasError) {
               return Center(child: Text(snapshot.error.toString()));
             }
