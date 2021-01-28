@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'search_model.dart';
 import 'search_params.dart';
@@ -78,15 +79,18 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
             sm.sortBy = SortBy.values[index];
           },
         ),
-        // actions: [
-        //   // advertiser console not available on mobile
-        //   if (isDesktop)
-        //     IconButton(
-        //       icon: const Icon(Icons.login),
-        //       tooltip: 'Advertiser Login',
-        //       onPressed: () {},
-        //     ),
-        // ],
+        actions: [
+          // advertiser console not available on mobile
+          if (isDesktop)
+            IconButton(
+              icon: const Icon(Icons.post_add),
+              tooltip: 'Submit an ad',
+              onPressed: () {
+                // TODO this URL will probably change
+                launch('https://www.myperfectad.com/createad');
+              },
+            ),
+        ],
       ),
     );
   }
