@@ -11,7 +11,7 @@ class SearchModel extends ChangeNotifier {
   bool _showFemale = true;
   int _ageMin = 0;
   int _ageMax = 100;
-  int _range = 300; // in km
+  int _range = 1000; // in km
   LatLng _location = kLondonCoords;
   final Set<Category> _categories = {};
   SortBy _sortBy = SortBy.trending;

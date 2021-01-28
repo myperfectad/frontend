@@ -49,3 +49,6 @@ app.*.map.json
 /.firebaserc
 /firebase.json
 /.firebase/*.cache
+
+# Local Netlify folder
+.netlify
