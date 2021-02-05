@@ -82,13 +82,16 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
         actions: [
           // advertiser console not available on mobile
           if (isDesktop)
-            IconButton(
-              icon: const Icon(Icons.post_add),
-              tooltip: 'Submit an ad',
-              onPressed: () {
-                // TODO this URL will probably change
-                launch('https://www.myperfectad.com/createad');
-              },
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: TextButton.icon(
+                icon: const Icon(Icons.post_add),
+                label: Text('Submit an ad'),
+                onPressed: () {
+                  // TODO this URL will probably change
+                  launch('https://www.myperfectad.com/createad');
+                },
+              ),
             ),
         ],
       ),
