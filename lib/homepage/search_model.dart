@@ -1,10 +1,14 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' as F;
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 import 'package:http/http.dart' as http;
 
 import 'search_params.dart';
+
+const HOST = 'api.myperfectad.com';
+const DEV_HOST = HOST; // TODO change this
 
 class SearchModel extends ChangeNotifier {
   bool _showMale = true;
@@ -86,7 +90,7 @@ class SearchModel extends ChangeNotifier {
   Uri _composeQuery() {
     Uri u = Uri(
       scheme: 'https',
-      host: 'fathomless-spire-13212.herokuapp.com',
+      host: F.kReleaseMode ? HOST : DEV_HOST,
       path: '/items' + _sortBy.getPathFromSort,
       queryParameters: {
         'male': _showMale.toString(),
