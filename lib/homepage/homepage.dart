@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:latlong/latlong.dart';
+import 'package:http/http.dart' as http;
 
 import '../layout.dart';
 import 'adaptive_appbar.dart';
@@ -130,8 +131,10 @@ class GridNode extends StatelessWidget {
   }
 
   void _launchLink() async {
-    if (await canLaunch(ad.link) && Uri.parse(ad.link).isAbsolute)
+    if (await canLaunch(ad.link) && Uri.parse(ad.link).isAbsolute) {
       launch(ad.link);
+      http.get(Uri.https(HOST, '/items/detail/' + ad.id));
+    }
   }
 
   String _parseTags() {
