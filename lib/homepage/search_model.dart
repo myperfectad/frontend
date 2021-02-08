@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'search_params.dart';
 
 const HOST = 'api.myperfectad.com';
-const DEV_HOST = HOST; // TODO change this
+const DEV_HOST = 'fathomless-spire-13212.herokuapp.com';
 
 class SearchModel extends ChangeNotifier {
   bool _showMale = true;
