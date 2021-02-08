@@ -10,6 +10,8 @@ import 'search_params.dart';
 const HOST = 'api.myperfectad.com';
 const DEV_HOST = 'fathomless-spire-13212.herokuapp.com';
 
+String getHost() => F.kReleaseMode ? HOST : DEV_HOST;
+
 class SearchModel extends ChangeNotifier {
   bool _showMale = true;
   bool _showFemale = true;
@@ -90,7 +92,7 @@ class SearchModel extends ChangeNotifier {
   Uri _composeQuery() {
     Uri u = Uri(
       scheme: 'https',
-      host: F.kReleaseMode ? HOST : DEV_HOST,
+      host: getHost(),
       path: '/items' + _sortBy.getPathFromSort,
       queryParameters: {
         'male': _showMale.toString(),

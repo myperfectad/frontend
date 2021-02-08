@@ -133,7 +133,7 @@ class GridNode extends StatelessWidget {
   void _launchLink() async {
     if (await canLaunch(ad.link) && Uri.parse(ad.link).isAbsolute) {
       launch(ad.link);
-      http.get(Uri.https(HOST, '/items/detail/' + ad.id));
+      http.get(Uri.https(getHost(), '/items/detail/' + ad.id));
     }
   }
 
