@@ -93,9 +93,11 @@ extension SortByExtension on SortBy {
   String get getPathFromSort {
     switch (this) {
       case SortBy.trending:
+        return '/trending';
       case SortBy.latest:
         return '/latest';
       case SortBy.top:
+        return '/top';
       case SortBy.random:
       case SortBy.nearest:
       default:
