@@ -100,7 +100,7 @@ class SearchModel extends ChangeNotifier {
         'minAge': _ageMin.toString(),
         'maxAge': _ageMax.toString(),
         'categories': [
-          for (var c in _categories) c.name.toLowerCase(),
+          for (var c in _categories) c.toString().split('.').last,
         ],
         'longitude': _location.longitude.toString(),
         'latitude': _location.latitude.toString(),
