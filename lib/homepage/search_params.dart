@@ -89,7 +89,6 @@ enum SortBy {
 
 extension SortByExtension on SortBy {
 
-  // TODO
   String get getPathFromSort {
     switch (this) {
       case SortBy.trending:
@@ -99,6 +98,7 @@ extension SortByExtension on SortBy {
       case SortBy.top:
         return '/top';
       case SortBy.random:
+        return '/random';
       case SortBy.nearest:
       default:
         return '/nearest';
