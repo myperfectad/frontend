@@ -3,27 +3,27 @@ import 'package:latlong/latlong.dart';
 final LatLng kLondonCoords = LatLng(51.509865, -0.118092);
 
 enum Category {
-  learning, entertainment, fun, gaming, shopping, random, tool, irl
+  youtube, entertainment, etsy, shopify, indiedevs, random, tool, irl
 }
 
 extension CategoryExtension on Category {
   String get name {
     switch (this) {
 
-      case Category.learning:
-        return 'Learning';
+      case Category.youtube:
+        return 'Youtube';
         break;
       case Category.entertainment:
         return 'Entertainment';
         break;
-      case Category.fun:
-        return 'Fun';
+      case Category.etsy:
+        return 'Etsy';
         break;
-      case Category.gaming:
-        return 'Gaming';
+      case Category.shopify:
+        return 'Shopify';
         break;
-      case Category.shopping:
-        return 'Shopping';
+      case Category.indiedevs:
+        return 'Indie Devs';
         break;
       case Category.random:
         return 'Random';
@@ -41,20 +41,20 @@ extension CategoryExtension on Category {
 
   String get iconPath {
     switch (this) {
-      case Category.learning:
-        return 'images/book.png';
+      case Category.youtube:
+        return 'images/youtube.png';
         break;
       case Category.entertainment:
         return 'images/cinema.png';
         break;
-      case Category.fun:
-        return 'images/confetti.png';
+      case Category.etsy:
+        return 'images/etsy.png';
         break;
-      case Category.gaming:
-        return 'images/game-controller.png';
+      case Category.shopify:
+        return 'images/shopify.png';
         break;
-      case Category.shopping:
-        return 'images/online-shopping.png';
+      case Category.indiedevs:
+        return 'images/webdev.png';
         break;
       case Category.random:
         return 'images/random.png';
