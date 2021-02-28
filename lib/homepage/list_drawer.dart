@@ -207,27 +207,13 @@ class CategoriesPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CategoryButton(Category.youtube),
-            CategoryButton(Category.entertainment),
-            CategoryButton(Category.etsy),
-            CategoryButton(Category.shopify),
-          ],
-        ),
-        const SizedBox(height: 8.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CategoryButton(Category.indiedevs),
-            CategoryButton(Category.random),
-            CategoryButton(Category.tool),
-            CategoryButton(Category.irl),
-          ],
-        ),
+        CategoryButton(Category.youtube),
+        CategoryButton(Category.etsy),
+        CategoryButton(Category.shopify),
+        CategoryButton(Category.indiedevs),
       ],
     );
   }
