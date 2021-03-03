@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:provider/provider.dart';
 
 import 'homepage/homepage.dart';
 import 'homepage/search_model.dart';
 
 void main() {
+  // delete this line if ever compile for non-web
+  setUrlStrategy(PathUrlStrategy());
   runApp(MyApp());
 }
 
