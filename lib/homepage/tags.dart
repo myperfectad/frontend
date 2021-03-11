@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:http/http.dart' as http;
 
 import '../layout.dart';
+import 'search_model.dart';
 
 class Tags extends StatefulWidget {
   @override
@@ -10,31 +13,8 @@ class Tags extends StatefulWidget {
 }
 
 class _TagsState extends State<Tags> {
-  static const List<String> kTags = [
-    'Food',
-    'Tech',
-    'Sport',
-    'Fitness',
-    'Health',
-    'Gaming',
-    'Business',
-    'Startups',
-    'Eating',
-    'Drinking',
-  ];
 
-  Map<String, bool> _tags;
-
-  @override
-  void initState() {
-    super.initState();
-    // TODO change to network
-    _tags = Map.fromIterable(
-      kTags,
-      key: (tag) => tag,
-      value: (tag) => false,
-    );
-  }
+  Future<Map<String, bool>> _futureTagSugs;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +29,14 @@ class _TagsState extends State<Tags> {
             border: OutlineInputBorder(),
             hintText: 'Enter search term',
           ),
+          onChanged: (str) {
+            setState(() {
+              _futureTagSugs = _fetchSuggestions(str);
+            });
+          },
         ),
         const SizedBox(height: 8.0),
-        _suggestions(context),
+        _buildSuggestions(context),
         // the following didn't work:
         // KeyboardVisibilityBuilder(
         //   builder: (context, isVisible) {
@@ -66,25 +51,55 @@ class _TagsState extends State<Tags> {
     );
   }
 
-  Widget _suggestions(BuildContext context) {
-    return Wrap(
-      spacing: 4.0,
-      runSpacing: 4.0,
-      children: _tags.entries.map<Widget>(
-        (entry) {
-          return ChoiceChip(
-            label: Text(entry.key),
-            selected: entry.value,
-            onSelected: (bool selected) {
-              setState(() {
-                _tags[entry.key] = selected;
-              });
-              FocusScope.of(context).unfocus();
-            },
-            selectedColor: Theme.of(context).accentColor,
+  Widget _buildSuggestions(BuildContext context) {
+    return FutureBuilder(
+      future: _futureTagSugs,
+      builder: (context, AsyncSnapshot<Map<String, bool>> snapshot) {
+        
+        if (snapshot.hasData) {
+          return Wrap(
+            spacing: 4.0,
+            runSpacing: 4.0,
+            children: snapshot.data.entries.map<Widget>(
+              (entry) => ChoiceChip(
+                  label: Text(entry.key),
+                  selected: entry.value,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      snapshot.data[entry.key] = selected;
+                    });
+                    FocusScope.of(context).unfocus();
+                  },
+                  selectedColor: Theme.of(context).accentColor,
+                )
+            ).toList(),
           );
-        },
-      ).toList(),
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        
+        // don't display anything
+        return Row();
+      },
     );
+  }
+
+  Future<Map<String, bool>> _fetchSuggestions(String str) async {
+    final response = await http.get(Uri.https(
+      getHost(),
+      '/tags',
+      {'query': str},
+    ));
+
+    if (response.statusCode == 200) {
+      List<dynamic> tagsList = jsonDecode(response.body)['tags'];
+      return Map.fromIterable(
+        tagsList,
+        key: (tag) => tag.toString(),
+        value: (tag) => false,
+      );
+    } else {
+      throw Exception('Failed to fetch tag suggestions');
+    }
   }
 }
