@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
+import 'package:myperfectad/state_with_provider.dart';
 
 import '../layout.dart';
 import 'search_model.dart';
@@ -12,7 +13,7 @@ class Tags extends StatefulWidget {
   _TagsState createState() => _TagsState();
 }
 
-class _TagsState extends State<Tags> {
+class _TagsState extends StateWithProvider<Tags, SearchModel> {
 
   Future<Map<String, bool>> _futureTagSugs;
 
@@ -33,6 +34,7 @@ class _TagsState extends State<Tags> {
             setState(() {
               _futureTagSugs = _fetchSuggestions(str);
             });
+            provider.clearTags();
           },
         ),
         const SizedBox(height: 8.0),
@@ -68,6 +70,11 @@ class _TagsState extends State<Tags> {
                     setState(() {
                       snapshot.data[entry.key] = selected;
                     });
+                    if (selected) {
+                      provider.addTag(entry.key);
+                    } else {
+                      provider.removeTag(entry.key);
+                    }
                     FocusScope.of(context).unfocus();
                   },
                   selectedColor: Theme.of(context).accentColor,

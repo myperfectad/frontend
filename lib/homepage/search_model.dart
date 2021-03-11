@@ -21,6 +21,7 @@ class SearchModel extends ChangeNotifier {
   LatLng _location = kLondonCoords;
   final Set<Category> _categories = {};
   SortBy _sortBy = SortBy.trending;
+  final List<String> _tags = [];
 
   Future<List<Ad>> _futureAds;
 
@@ -86,6 +87,21 @@ class SearchModel extends ChangeNotifier {
     _sortBy = s;
     _reFetch();
   }
+
+  void addTag(String tag) {
+    _tags.add(tag);
+    _reFetch();
+  }
+
+  void removeTag(String tag) {
+    _tags.remove(tag);
+    _reFetch();
+  }
+
+  void clearTags() {
+    _tags.clear();
+    _reFetch();
+  }
   
   Future<List<Ad>> get futureAds => _futureAds;
 
@@ -105,6 +121,7 @@ class SearchModel extends ChangeNotifier {
         'longitude': _location.longitude.toString(),
         'latitude': _location.latitude.toString(),
         'radius': _range >= 1000 ? '-1' : _range.toString(),
+        'tags': _tags,
       },
     );
     debugPrint(u.toString());
@@ -160,6 +177,7 @@ class Ad {
       createdAt: json['createdAt'],
       category: json['category'],
       location: LatLng(json['location']['lat'], json['location']['long']),
+      tags: json['tags'].map<String>((tag) => tag.toString()).toList(),
     );
   }
 }
