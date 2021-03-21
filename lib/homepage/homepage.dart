@@ -50,10 +50,29 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class ScrollContent extends StatelessWidget {
+class ScrollContent extends StatefulWidget {
   ScrollContent(this.isDesktop, {Key key}) : super(key: key);
 
   final bool isDesktop;
+
+  @override
+  _ScrollContentState createState() => _ScrollContentState();
+}
+
+class _ScrollContentState extends State<ScrollContent> {
+
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.isDesktop) {
+      _openDrawerAsync();
+    }
+  }
+
+  void _openDrawerAsync() async {
+    await Future.delayed(const Duration(seconds: 1));
+    Scaffold.of(context).openDrawer();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +95,7 @@ class ScrollContent extends StatelessWidget {
               return GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   // adaptive count. Count is always 2 on mobile
-                  crossAxisCount: isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
+                  crossAxisCount: widget.isDesktop ? (constraints.maxWidth ~/ MIN_AD_WIDTH) : 2,
                 ),
                 itemCount: ads.length,
                 itemBuilder: (context, index) {
