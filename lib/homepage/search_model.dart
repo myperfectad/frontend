@@ -19,6 +19,7 @@ class SearchModel extends ChangeNotifier {
   int _ageMax = 100;
   int _range = 1000; // in km
   LatLng _location = kLondonCoords;
+  final Set<Platform> _platforms = {};
   final Set<Category> _categories = {};
   SortBy _sortBy = SortBy.trending;
   final List<String> _tags = [];
@@ -73,6 +74,20 @@ class SearchModel extends ChangeNotifier {
     return _categories.contains(category);
   }
 
+  void addPlatform(Platform platform) {
+    _platforms.add(platform);
+    _reFetch();
+  }
+
+  void removePlatform(Platform platform) {
+    _platforms.remove(platform);
+    _reFetch();
+  }
+
+  bool hasPlatform(Platform platform) {
+    return _platforms.contains(platform);
+  }
+
   /// Gets the current range in kilometers.
   int get range => _range;
 
@@ -115,6 +130,9 @@ class SearchModel extends ChangeNotifier {
         'female': _showFemale.toString(),
         'minAge': _ageMin.toString(),
         'maxAge': _ageMax.toString(),
+        'platforms': [
+          for (var c in _platforms) c.toString().split('.').last,
+        ],
         'categories': [
           for (var c in _categories) c.toString().split('.').last,
         ],
@@ -161,11 +179,12 @@ class Ad {
   final String link;
   final String imageUrl;
   final String createdAt;
+  final String platform;
   final String category;
   final LatLng location;
   final List<String> tags;
 
-  Ad({this.id, this.title, this.desc, this.link, this.imageUrl, this.createdAt, this.category, this.location, this.tags});
+  Ad({this.id, this.title, this.desc, this.link, this.imageUrl, this.createdAt, this.category, this.location, this.tags, this.platform});
 
   factory Ad.fromJson(Map<String, dynamic> json) {
     return Ad(
@@ -175,6 +194,7 @@ class Ad {
       link: json['linkUrl'],
       imageUrl: json['photoUrl'],
       createdAt: json['createdAt'],
+      platform: json['platform'],
       category: json['category'],
       location: LatLng(json['location']['lat'], json['location']['long']),
       tags: json['tags'].map<String>((tag) => tag.toString()).toList(),

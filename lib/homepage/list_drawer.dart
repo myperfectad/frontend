@@ -33,6 +33,9 @@ class ListDrawer extends StatelessWidget {
               Text('Location', style: Theme.of(context).textTheme.headline4),
               MiniMap(),
               // const SizedBox(height: 16.0),
+              Text('Which platform?', style: Theme.of(context).textTheme.headline4),
+              PlatformPicker(),
+              const SizedBox(height: 16.0),
               Text('What do you feel like?', style: Theme.of(context).textTheme.headline4),
               CategoriesPicker(),
               const SizedBox(height: 16.0),
@@ -203,17 +206,46 @@ class _AgeSliderState extends StateWithProvider<AgeSlider, SearchModel> {
   }
 }
 
-class CategoriesPicker extends StatelessWidget {
-
+class PlatformPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CategoryButton(Category.youtube),
-        CategoryButton(Category.etsy),
-        CategoryButton(Category.shopify),
-        CategoryButton(Category.indiedevs),
+        PlatformButton(Platform.youtube),
+        PlatformButton(Platform.etsy),
+        PlatformButton(Platform.shopify),
+        PlatformButton(Platform.indiedevs),
+      ],
+    );
+  }
+}
+
+class CategoriesPicker extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CategoryButton(Category.learning),
+            CategoryButton(Category.entertainment),
+            CategoryButton(Category.fun),
+            CategoryButton(Category.gaming),
+          ],
+        ),
+        const SizedBox(height: 8.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CategoryButton(Category.shopping),
+            CategoryButton(Category.random),
+            CategoryButton(Category.tool),
+            CategoryButton(Category.irl),
+          ],
+        ),
       ],
     );
   }
@@ -254,6 +286,51 @@ class _CategoryButtonState extends StateWithProvider<CategoryButton, SearchModel
             provider.addCategory(widget.category);
           } else {
             provider.removeCategory(widget.category);
+          }
+          FocusScope.of(context).unfocus();
+        },
+      ),
+    );
+  }
+}
+
+/// this is a carbon copy of CategoryButton. There's probably a smarter way 
+/// through inheritance or whatnot, but oh well
+class PlatformButton extends StatefulWidget {
+  PlatformButton(this.platform, {Key key}) : super(key: key);
+
+  final Platform platform;
+
+  @override
+  _PlatformButtonState createState() => _PlatformButtonState();
+}
+
+class _PlatformButtonState extends StateWithProvider<PlatformButton, SearchModel> {
+  bool isSelected;
+
+  @override
+  void initState() {
+    super.initState();
+    isSelected = provider.hasPlatform(widget.platform);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: widget.platform.name,
+      child: InkWell(
+        child: Image.asset(
+          widget.platform.iconPath,
+          color: isSelected ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+        ),
+        onTap: () {
+          setState(() {
+            isSelected = !isSelected;
+          });
+          if (isSelected) {
+            provider.addPlatform(widget.platform);
+          } else {
+            provider.removePlatform(widget.platform);
           }
           FocusScope.of(context).unfocus();
         },

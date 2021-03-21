@@ -3,27 +3,27 @@ import 'package:latlong/latlong.dart';
 final LatLng kLondonCoords = LatLng(51.509865, -0.118092);
 
 enum Category {
-  youtube, entertainment, etsy, shopify, indiedevs, random, tool, irl
+  learning, entertainment, fun, gaming, shopping, random, tool, irl
 }
 
 extension CategoryExtension on Category {
   String get name {
     switch (this) {
 
-      case Category.youtube:
-        return 'Youtube';
+      case Category.learning:
+        return 'Learning';
         break;
       case Category.entertainment:
         return 'Entertainment';
         break;
-      case Category.etsy:
-        return 'Etsy';
+      case Category.fun:
+        return 'Fun';
         break;
-      case Category.shopify:
-        return 'Shopify';
+      case Category.gaming:
+        return 'Gaming';
         break;
-      case Category.indiedevs:
-        return 'Indie Devs';
+      case Category.shopping:
+        return 'Shopping';
         break;
       case Category.random:
         return 'Random';
@@ -41,20 +41,20 @@ extension CategoryExtension on Category {
 
   String get iconPath {
     switch (this) {
-      case Category.youtube:
-        return 'images/youtube.png';
+      case Category.learning:
+        return 'images/book.png';
         break;
       case Category.entertainment:
         return 'images/cinema.png';
         break;
-      case Category.etsy:
-        return 'images/etsy.png';
+      case Category.fun:
+        return 'images/confetti.png';
         break;
-      case Category.shopify:
-        return 'images/shopify.png';
+      case Category.gaming:
+        return 'images/game-controller.png';
         break;
-      case Category.indiedevs:
-        return 'images/webdev.png';
+      case Category.shopping:
+        return 'images/online-shopping.png';
         break;
       case Category.random:
         return 'images/random.png';
@@ -102,6 +102,40 @@ extension SortByExtension on SortBy {
       case SortBy.nearest:
       default:
         return '/nearest';
+    }
+  }
+}
+
+enum Platform {
+  shopify, etsy, youtube, indiedevs
+}
+
+extension PlatformExtension on Platform {
+  String get name {
+    switch (this) {
+      case Platform.youtube:
+        return 'Youtube';
+      case Platform.etsy:
+        return 'Etsy';
+      case Platform.shopify:
+        return 'Shopify';
+      case Platform.indiedevs:
+      default:
+        return 'Indie Devs';
+    }
+  }
+
+  String get iconPath {
+    switch (this) {
+      case Platform.youtube:
+        return 'images/youtube.png';
+      case Platform.etsy:
+        return 'images/etsy.png';
+      case Platform.shopify:
+        return 'images/shopify.png';
+      case Platform.indiedevs:
+      default:
+        return 'images/webdev.png';
     }
   }
 }

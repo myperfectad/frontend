@@ -170,6 +170,7 @@ class GridNode extends StatelessWidget {
                 children: [
                   Text(ad.desc, style: bodyStyle),
                   const SizedBox(height: 16.0),
+                  Text('Platform: ${ad.platform}', style: bodyStyle),
                   Text('Category: ${ad.category}', style: bodyStyle),
                   Text('Tags: ${_parseTags()}', style: bodyStyle),
                   const SizedBox(height: 16.0),
