@@ -18,6 +18,12 @@ class _TagsState extends StateWithProvider<Tags, SearchModel> {
   Future<Map<String, bool>> _futureTagSugs;
 
   @override
+  void initState() {
+    super.initState();
+    _futureTagSugs = _fetchSuggestions(null);
+  }
+
+  @override
   Widget build(BuildContext context) {
     // https://stackoverflow.com/questions/56211844/flutter-web-mouse-hover-change-cursor-to-pointer
     // https://stackoverflow.com/questions/51652897/how-to-hide-soft-input-keyboard-on-flutter-after-clicking-outside-textfield-anyw
