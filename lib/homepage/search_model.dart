@@ -117,6 +117,10 @@ class SearchModel extends ChangeNotifier {
     _tags.clear();
     _reFetch();
   }
+
+  List<String> getTags() {
+    return _tags;
+  }
   
   Future<List<Ad>> get futureAds => _futureAds;
 

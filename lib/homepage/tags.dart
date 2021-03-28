@@ -20,6 +20,11 @@ class _TagsState extends StateWithProvider<Tags, SearchModel> {
   @override
   void initState() {
     super.initState();
+    _tags.addEntries(
+      provider.getTags().map<MapEntry<String, bool>>(
+            (tag) => MapEntry(tag, true),
+          ),
+    );
     _fetchSuggestions(null);
   }
 
