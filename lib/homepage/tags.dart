@@ -15,12 +15,12 @@ class Tags extends StatefulWidget {
 
 class _TagsState extends StateWithProvider<Tags, SearchModel> {
 
-  Future<Map<String, bool>> _futureTagSugs;
+  final Map<String, bool> _tags = {};
 
   @override
   void initState() {
     super.initState();
-    _futureTagSugs = _fetchSuggestions(null);
+    _fetchSuggestions(null);
   }
 
   @override
@@ -37,10 +37,11 @@ class _TagsState extends StateWithProvider<Tags, SearchModel> {
             hintText: 'Enter search term',
           ),
           onChanged: (str) {
+            // when you type a search term, clear the tags that aren't selected
             setState(() {
-              _futureTagSugs = _fetchSuggestions(str);
+              _clearUnselectedTags();
             });
-            provider.clearTags();
+            _fetchSuggestions(str);
           },
         ),
         const SizedBox(height: 8.0),
@@ -60,44 +61,31 @@ class _TagsState extends StateWithProvider<Tags, SearchModel> {
   }
 
   Widget _buildSuggestions(BuildContext context) {
-    return FutureBuilder(
-      future: _futureTagSugs,
-      builder: (context, AsyncSnapshot<Map<String, bool>> snapshot) {
-        
-        if (snapshot.hasData) {
-          return Wrap(
-            spacing: 4.0,
-            runSpacing: 4.0,
-            children: snapshot.data.entries.map<Widget>(
-              (entry) => ChoiceChip(
-                  label: Text(entry.key),
-                  selected: entry.value,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      snapshot.data[entry.key] = selected;
-                    });
-                    if (selected) {
-                      provider.addTag(entry.key);
-                    } else {
-                      provider.removeTag(entry.key);
-                    }
-                    FocusScope.of(context).unfocus();
-                  },
-                  selectedColor: Theme.of(context).buttonColor,
-                )
-            ).toList(),
-          );
-        } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        
-        // don't display anything
-        return Row();
-      },
+    return Wrap(
+      spacing: 4.0,
+      runSpacing: 4.0,
+      children: _tags.entries.map<Widget>(
+        (entry) => ChoiceChip(
+          label: Text(entry.key),
+          selected: entry.value,
+          onSelected: (bool selected) {
+            setState(() {
+              _tags[entry.key] = selected;
+            });
+            if (selected) {
+              provider.addTag(entry.key);
+            } else {
+              provider.removeTag(entry.key);
+            }
+            FocusScope.of(context).unfocus();
+          },
+          selectedColor: Theme.of(context).buttonColor,
+        )
+      ).toList(),
     );
   }
 
-  Future<Map<String, bool>> _fetchSuggestions(String str) async {
+  void _fetchSuggestions(String str) async {
     final response = await http.get(Uri.https(
       getHost(),
       '/tags',
@@ -106,13 +94,22 @@ class _TagsState extends StateWithProvider<Tags, SearchModel> {
 
     if (response.statusCode == 200) {
       List<dynamic> tagsList = jsonDecode(response.body)['tags'];
-      return Map.fromIterable(
-        tagsList,
-        key: (tag) => tag.toString(),
-        value: (tag) => false,
-      );
+
+      for (var tag in tagsList) {
+        String s = tag.toString();
+        // don't add if it's already selected, otherwise duplicate
+        if (!_tags.containsKey(s))
+          _tags[s] = false;
+      }
+
+      // don't forget
+      setState(() {});
     } else {
-      throw Exception('Failed to fetch tag suggestions');
+      throw Exception(response.reasonPhrase);
     }
+  }
+
+  void _clearUnselectedTags() {
+    _tags.removeWhere((key, value) => value == false);
   }
 }
