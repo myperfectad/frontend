@@ -54,7 +54,7 @@ class _TagsState extends StateWithProvider<Tags, SearchModel> {
         // ),
         // workaround:
         if (!isDisplayDesktop(context))
-          SizedBox(height: 256.0),
+          SizedBox(height: 300.0),
       ],
     );
   }
@@ -83,7 +83,7 @@ class _TagsState extends StateWithProvider<Tags, SearchModel> {
                     }
                     FocusScope.of(context).unfocus();
                   },
-                  selectedColor: Theme.of(context).accentColor,
+                  selectedColor: Theme.of(context).buttonColor,
                 )
             ).toList(),
           );
